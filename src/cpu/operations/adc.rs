@@ -34,7 +34,7 @@ impl Operation for Adc {
         let value = self.target.value(cpu);
 
         let (new_value, did_overflow) =
-            Adc::carrying_add(cpu.registers.a(), value, cpu.registers.cy_flag());
+            Self::carrying_add(cpu.registers.a(), value, cpu.registers.cy_flag());
 
         cpu.registers.set_z_flag(new_value == 0);
         cpu.registers.set_n_flag(false);

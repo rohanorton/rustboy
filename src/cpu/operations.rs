@@ -6,3 +6,4 @@ pub mod operation;
 pub mod sbc;
 pub mod sub;
 pub mod targets;
+pub mod xor;
