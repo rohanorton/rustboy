@@ -1,6 +1,7 @@
 use super::adc::Adc;
 use super::add::Add;
 use super::operation::Operation;
+use super::sub::Sub;
 use super::targets::ArithmeticTarget8Bit;
 
 // Macro to simplify op-code match creation. Wraps result in Box, to prevent type error.
@@ -33,8 +34,19 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0x8E => Adc::new(ArithmeticTarget8Bit::HLAddr, 8),
         0x8F => Adc::new(ArithmeticTarget8Bit::A, 4),
 
+        0x90 => Sub::new(ArithmeticTarget8Bit::B, 4),
+        0x91 => Sub::new(ArithmeticTarget8Bit::C, 4),
+        0x92 => Sub::new(ArithmeticTarget8Bit::D, 4),
+        0x93 => Sub::new(ArithmeticTarget8Bit::E, 4),
+        0x94 => Sub::new(ArithmeticTarget8Bit::H, 4),
+        0x95 => Sub::new(ArithmeticTarget8Bit::L, 4),
+        0x96 => Sub::new(ArithmeticTarget8Bit::HLAddr, 8),
+        0x97 => Sub::new(ArithmeticTarget8Bit::A, 4),
+
         0xC6 => Add::new(ArithmeticTarget8Bit::D8, 8),
 
         0xCE => Adc::new(ArithmeticTarget8Bit::D8, 8),
+
+        0xD6 => Sub::new(ArithmeticTarget8Bit::D8, 8),
     })
 }
