@@ -4,6 +4,7 @@ use super::targets::ArithmeticTarget8Bit;
 use super::adc::Adc;
 use super::add::Add;
 use super::and::And;
+use super::ccf::Ccf;
 use super::cp::Cp;
 use super::dec::Dec;
 use super::inc::Inc;
@@ -50,6 +51,8 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0x3C => Inc::new(ArithmeticTarget8Bit::A, 4),
         0x3D => Dec::new(ArithmeticTarget8Bit::A, 4),
+
+        0x3F => Ccf::new(4),
 
         0x80 => Add::new(ArithmeticTarget8Bit::B, 4),
         0x81 => Add::new(ArithmeticTarget8Bit::C, 4),
