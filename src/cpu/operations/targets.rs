@@ -1,7 +1,7 @@
 use crate::cpu::cpu::Cpu;
 use std::fmt;
 
-pub enum Target {
+pub enum ArithmeticTarget8Bit {
     A,
     B,
     C,
@@ -13,7 +13,7 @@ pub enum Target {
     D8,
 }
 
-impl Target {
+impl ArithmeticTarget8Bit {
     pub fn value(&self, cpu: &mut Cpu) -> u8 {
         match self {
             Self::A => cpu.registers.a(),
@@ -29,7 +29,7 @@ impl Target {
     }
 }
 
-impl fmt::Display for Target {
+impl fmt::Display for ArithmeticTarget8Bit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,

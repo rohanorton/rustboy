@@ -4,21 +4,37 @@ use super::super::cpu::Cpu;
 use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
 
-pub struct Add {
+pub struct Adc {
     target: ArithmeticTarget8Bit,
     cycles: u8,
 }
 
-impl Add {
+impl Adc {
     pub fn new(target: ArithmeticTarget8Bit, cycles: u8) -> Self {
-        Add { target, cycles }
+        Adc { target, cycles }
+    }
+
+    // TODO: This is awful... There must be a better way!?
+    fn carrying_add(x: u8, y: u8, cy: bool) -> (u8, bool) {
+        let mut res: u8 = x;
+        let mut res_cy = false;
+
+        for n in [y, cy as u8] {
+            let (new_res, new_cy) = res.overflowing_add(n);
+            res = new_res;
+            res_cy = new_cy || res_cy;
+        }
+
+        (res, res_cy)
     }
 }
 
-impl Operation for Add {
+impl Operation for Adc {
     fn execute(&self, cpu: &mut Cpu) -> u8 {
         let value = self.target.value(cpu);
-        let (new_value, did_overflow) = cpu.registers.a().overflowing_add(value);
+
+        let (new_value, did_overflow) =
+            Adc::carrying_add(cpu.registers.a(), value, cpu.registers.cy_flag());
 
         cpu.registers.set_z_flag(new_value == 0);
         cpu.registers.set_n_flag(false);
@@ -33,9 +49,9 @@ impl Operation for Add {
     }
 }
 
-impl fmt::Display for Add {
+impl fmt::Display for Adc {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "ADD A,{}", self.target)
+        write!(f, "ADC A,{}", self.target)
     }
 }
 
@@ -43,7 +59,7 @@ impl fmt::Display for Add {
 mod test {
     use crate::memory::void::Void;
 
-    use super::Add;
+    use super::Adc;
     use super::ArithmeticTarget8Bit;
     use super::Cpu;
     use super::Operation;
@@ -58,7 +74,7 @@ mod test {
     fn returns_cycle_count() {
         let mut cpu = empty();
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         let res = op.execute(&mut cpu);
 
@@ -69,25 +85,27 @@ mod test {
     }
 
     #[test]
-    fn adds_register_to_accumulator() {
+    fn adds_register_and_carry_flag_to_accumulator() {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x02);
+        cpu.registers.set_cy_flag(true);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
-        assert_eq!(cpu.registers.a(), 0x03);
+        assert_eq!(cpu.registers.a(), 0x04);
     }
 
     #[test]
     fn sets_zero_flag_when_result_eq_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x00);
-        cpu.registers.set_c(0x00);
+        cpu.registers.set_a(0xF0);
+        cpu.registers.set_c(0x0F);
+        cpu.registers.set_cy_flag(true);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -99,8 +117,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x01);
+        cpu.registers.set_cy_flag(true);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -112,8 +131,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
+        cpu.registers.set_cy_flag(true);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -125,8 +145,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0xFF);
         cpu.registers.set_c(0x01);
+        cpu.registers.set_cy_flag(false);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -138,8 +159,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
+        cpu.registers.set_cy_flag(false);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -151,8 +173,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x0F);
         cpu.registers.set_c(0x01);
+        cpu.registers.set_cy_flag(false);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -164,8 +187,9 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x0E);
         cpu.registers.set_c(0x01);
+        cpu.registers.set_cy_flag(false);
 
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
@@ -174,27 +198,28 @@ mod test {
 
     #[test]
     fn display_trait() {
-        let op = Add::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-        assert_eq!(format!("{op}"), "ADD A,C");
+        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        assert_eq!(format!("{op}"), "ADC A,C");
     }
 
     #[test]
     fn example_from_gameboy_programming_manual() {
         let mut cpu = empty();
-        // When A = 0x3A and B = 0xC6,
-        cpu.registers.set_a(0x3A);
-        cpu.registers.set_b(0xC6);
 
-        // ADD A, B
-        let op = Add::new(ArithmeticTarget8Bit::B, CYCLE_COUNT);
+        // When A=E1h,E=0Fh and CY=1,
+        cpu.registers.set_a(0xE1);
+        cpu.registers.set_e(0x0F);
+        cpu.registers.set_cy_flag(true);
+
+        // ADC A, E
+        let op = Adc::new(ArithmeticTarget8Bit::E, CYCLE_COUNT);
 
         op.execute(&mut cpu);
 
-        // A←0,Z←1,H←1,N←0,CY←1
-        assert_eq!(cpu.registers.a(), 0);
-        assert!(cpu.registers.z_flag());
+        // A←F1h,Z←0,H←1,CY←0
+        assert_eq!(cpu.registers.a(), 0xF1);
+        assert!(!cpu.registers.z_flag());
         assert!(cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(cpu.registers.cy_flag());
+        assert!(!cpu.registers.cy_flag());
     }
 }
