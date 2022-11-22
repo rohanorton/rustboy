@@ -1,7 +1,6 @@
 use bitfield::bitfield;
 
 bitfield! {
-    #[derive(Default)]
     pub struct Registers(u128);
     impl Debug;
 
@@ -62,9 +61,35 @@ impl Registers {
     }
 }
 
+impl Default for Registers {
+    fn default() -> Self {
+        //          A F  B C  D E  H L  PC   SP   ---- ----
+        Registers(0x01B0_0013_00D8_014D_0100_FFFE_0000_0000)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::Registers;
+
+    #[test]
+    fn defaults_set_correctly() {
+        let reg = Registers::default();
+        assert!(reg.z_flag(), "Z Flag should be set by default");
+        assert!(!reg.n_flag(), "N Flag should not be set by default");
+        assert!(reg.h_flag(), "H Flag should be set by default");
+        assert!(reg.cy_flag(), "CY Flag should be set by default");
+        assert_eq!(reg.a(), 0x01);
+        assert_eq!(reg.f(), 0xB0);
+        assert_eq!(reg.b(), 0x00);
+        assert_eq!(reg.c(), 0x13);
+        assert_eq!(reg.d(), 0x00);
+        assert_eq!(reg.e(), 0xD8);
+        assert_eq!(reg.h(), 0x01);
+        assert_eq!(reg.l(), 0x4D);
+        assert_eq!(reg.pc(), 0x0100,);
+        assert_eq!(reg.sp(), 0xFFFE,);
+    }
 
     #[test]
     fn flags_correspond_to_bits_in_f_register() {
