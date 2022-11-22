@@ -1,6 +1,7 @@
 use super::adc::Adc;
 use super::add::Add;
 use super::operation::Operation;
+use super::sbc::Sbc;
 use super::sub::Sub;
 use super::targets::ArithmeticTarget8Bit;
 
@@ -43,10 +44,21 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0x96 => Sub::new(ArithmeticTarget8Bit::HLAddr, 8),
         0x97 => Sub::new(ArithmeticTarget8Bit::A, 4),
 
+        0x98 => Sbc::new(ArithmeticTarget8Bit::B, 4),
+        0x99 => Sbc::new(ArithmeticTarget8Bit::C, 4),
+        0x9A => Sbc::new(ArithmeticTarget8Bit::D, 4),
+        0x9B => Sbc::new(ArithmeticTarget8Bit::E, 4),
+        0x9C => Sbc::new(ArithmeticTarget8Bit::H, 4),
+        0x9D => Sbc::new(ArithmeticTarget8Bit::L, 4),
+        0x9E => Sbc::new(ArithmeticTarget8Bit::HLAddr, 8),
+        0x9F => Sbc::new(ArithmeticTarget8Bit::A, 4),
+
         0xC6 => Add::new(ArithmeticTarget8Bit::D8, 8),
 
         0xCE => Adc::new(ArithmeticTarget8Bit::D8, 8),
 
         0xD6 => Sub::new(ArithmeticTarget8Bit::D8, 8),
+
+        0xDE => Sbc::new(ArithmeticTarget8Bit::D8, 8),
     })
 }
