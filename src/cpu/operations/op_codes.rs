@@ -2,6 +2,7 @@ use super::adc::Adc;
 use super::add::Add;
 use super::and::And;
 use super::operation::Operation;
+use super::or::Or;
 use super::sbc::Sbc;
 use super::sub::Sub;
 use super::targets::ArithmeticTarget8Bit;
@@ -73,6 +74,15 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0xAE => Xor::new(ArithmeticTarget8Bit::HLAddr, 8),
         0xAF => Xor::new(ArithmeticTarget8Bit::A, 4),
 
+        0xB0 => Or::new(ArithmeticTarget8Bit::B, 4),
+        0xB1 => Or::new(ArithmeticTarget8Bit::C, 4),
+        0xB2 => Or::new(ArithmeticTarget8Bit::D, 4),
+        0xB3 => Or::new(ArithmeticTarget8Bit::E, 4),
+        0xB4 => Or::new(ArithmeticTarget8Bit::H, 4),
+        0xB5 => Or::new(ArithmeticTarget8Bit::L, 4),
+        0xB6 => Or::new(ArithmeticTarget8Bit::HLAddr, 8),
+        0xB7 => Or::new(ArithmeticTarget8Bit::A, 4),
+
         0xC6 => Add::new(ArithmeticTarget8Bit::D8, 8),
 
         0xCE => Adc::new(ArithmeticTarget8Bit::D8, 8),
@@ -84,5 +94,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0xE6 => And::new(ArithmeticTarget8Bit::D8, 8),
 
         0xEE => Xor::new(ArithmeticTarget8Bit::D8, 8),
+
+        0xF6 => Or::new(ArithmeticTarget8Bit::D8, 8),
     })
 }
