@@ -1,14 +1,16 @@
+use super::operation::Operation;
+use super::targets::ArithmeticTarget8Bit;
+
 use super::adc::Adc;
 use super::add::Add;
 use super::and::And;
 use super::cp::Cp;
 use super::dec::Dec;
 use super::inc::Inc;
-use super::operation::Operation;
 use super::or::Or;
 use super::sbc::Sbc;
+use super::scf::Scf;
 use super::sub::Sub;
-use super::targets::ArithmeticTarget8Bit;
 use super::xor::Xor;
 
 // Macro to simplify op-code match creation. Wraps result in Box, to prevent type error.
@@ -43,6 +45,8 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0x34 => Inc::new(ArithmeticTarget8Bit::HLAddr, 12),
         0x35 => Dec::new(ArithmeticTarget8Bit::HLAddr, 12),
+
+        0x37 => Scf::new(4),
 
         0x3C => Inc::new(ArithmeticTarget8Bit::A, 4),
         0x3D => Dec::new(ArithmeticTarget8Bit::A, 4),
