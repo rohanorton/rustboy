@@ -27,6 +27,19 @@ impl ArithmeticTarget8Bit {
             Self::D8 => cpu.read_u8(),
         }
     }
+    pub fn set_value(&self, cpu: &mut Cpu, val: u8) {
+        match self {
+            Self::A => cpu.registers.set_a(val),
+            Self::B => cpu.registers.set_b(val),
+            Self::C => cpu.registers.set_c(val),
+            Self::D => cpu.registers.set_d(val),
+            Self::E => cpu.registers.set_e(val),
+            Self::H => cpu.registers.set_h(val),
+            Self::L => cpu.registers.set_l(val),
+            Self::HLAddr => cpu.mmu.set_byte(cpu.registers.hl(), val),
+            Self::D8 => panic!("Illegal Operation. Cannot set value."),
+        };
+    }
 }
 
 impl fmt::Display for ArithmeticTarget8Bit {

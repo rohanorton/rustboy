@@ -2,6 +2,7 @@ use super::adc::Adc;
 use super::add::Add;
 use super::and::And;
 use super::cp::Cp;
+use super::inc::Inc;
 use super::operation::Operation;
 use super::or::Or;
 use super::sbc::Sbc;
@@ -21,6 +22,22 @@ macro_rules! boxed_operation {(
 
 pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
     boxed_operation!(op_code, {
+        0x04 => Inc::new(ArithmeticTarget8Bit::B, 4),
+
+        0x0C => Inc::new(ArithmeticTarget8Bit::C, 4),
+
+        0x14 => Inc::new(ArithmeticTarget8Bit::D, 4),
+
+        0x1C => Inc::new(ArithmeticTarget8Bit::E, 4),
+
+        0x24 => Inc::new(ArithmeticTarget8Bit::H, 4),
+
+        0x2C => Inc::new(ArithmeticTarget8Bit::L, 4),
+
+        0x34 => Inc::new(ArithmeticTarget8Bit::HLAddr, 12),
+
+        0x3C => Inc::new(ArithmeticTarget8Bit::A, 4),
+
         0x80 => Add::new(ArithmeticTarget8Bit::B, 4),
         0x81 => Add::new(ArithmeticTarget8Bit::C, 4),
         0x82 => Add::new(ArithmeticTarget8Bit::D, 4),
