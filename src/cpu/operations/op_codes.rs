@@ -6,6 +6,7 @@ use super::add::Add;
 use super::and::And;
 use super::ccf::Ccf;
 use super::cp::Cp;
+use super::cpl::Cpl;
 use super::dec::Dec;
 use super::inc::Inc;
 use super::or::Or;
@@ -43,6 +44,8 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0x2C => Inc::new(ArithmeticTarget8Bit::L, 4),
         0x2D => Dec::new(ArithmeticTarget8Bit::L, 4),
+
+        0x2F => Cpl::new(4),
 
         0x34 => Inc::new(ArithmeticTarget8Bit::HLAddr, 12),
         0x35 => Dec::new(ArithmeticTarget8Bit::HLAddr, 12),
