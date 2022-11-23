@@ -17,6 +17,7 @@ pub mod nop;
 pub mod op_codes;
 pub mod operation;
 pub mod or;
+pub mod pop;
 pub mod push;
 pub mod sbc;
 pub mod scf;

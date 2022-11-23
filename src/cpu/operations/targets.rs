@@ -301,6 +301,14 @@ impl PushPopTarget {
             Self::AF => cpu.registers.af(),
         }
     }
+    pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
+        match self {
+            Self::BC => cpu.registers.set_bc(val),
+            Self::DE => cpu.registers.set_de(val),
+            Self::HL => cpu.registers.set_hl(val),
+            Self::AF => cpu.registers.set_af(val),
+        }
+    }
 }
 
 impl fmt::Display for PushPopTarget {
