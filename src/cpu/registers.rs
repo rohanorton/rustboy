@@ -59,6 +59,14 @@ impl Registers {
     pub fn decr_sp(&mut self) {
         self.set_sp(self.sp().wrapping_sub(1));
     }
+
+    pub fn incr_hl(&mut self) {
+        self.set_hl(self.hl().wrapping_add(1));
+    }
+
+    pub fn decr_hl(&mut self) {
+        self.set_hl(self.hl().wrapping_sub(1));
+    }
 }
 
 impl Default for Registers {

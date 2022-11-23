@@ -27,6 +27,12 @@ impl Cpu {
         self.registers.incr_pc();
         res
     }
+
+    pub fn read_u16(&mut self) -> u16 {
+        let l = self.read_u8();
+        let h = self.read_u8();
+        ((h as u16) << 8) | l as u16
+    }
 }
 
 #[cfg(test)]
