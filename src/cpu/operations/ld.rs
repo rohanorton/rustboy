@@ -5,22 +5,20 @@ use super::operation::Operation;
 use super::targets::LdTarget;
 
 pub struct Ld {
-    cycles: u8,
     dest: LdTarget,
     src: LdTarget,
 }
 
 impl Ld {
-    pub fn new(dest: LdTarget, src: LdTarget, cycles: u8) -> Self {
-        Ld { cycles, dest, src }
+    pub fn new(dest: LdTarget, src: LdTarget) -> Self {
+        Ld { dest, src }
     }
 }
 
 impl Operation for Ld {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let value = self.src.value(cpu);
         self.dest.set_value(cpu, value);
-        self.cycles
     }
 }
 
@@ -53,28 +51,12 @@ mod test {
         Cpu::new(ram)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-        let op = Ld::new(LdTarget::A, LdTarget::B, CYCLE_COUNT);
-        let res = op.execute(&mut cpu);
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn loads_value_from_one_register_into_another() {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_b(0x23);
-
-        let op = Ld::new(LdTarget::A, LdTarget::B, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld::new(LdTarget::A, LdTarget::B).execute(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x23);
     }
 
@@ -83,10 +65,7 @@ mod test {
         let mut cpu = with_ram(vec![0x19]);
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x00);
-
-        let op = Ld::new(LdTarget::A, LdTarget::HLAddr, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld::new(LdTarget::A, LdTarget::HLAddr).execute(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x19);
     }
 
@@ -95,10 +74,7 @@ mod test {
         let mut cpu = with_ram(vec![0x00]);
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x29);
-
-        let op = Ld::new(LdTarget::HLAddr, LdTarget::A, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld::new(LdTarget::HLAddr, LdTarget::A).execute(&mut cpu);
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x29);
     }
 
@@ -107,10 +83,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x29);
-
-        let op = Ld::new(LdTarget::HLIAddr, LdTarget::A, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld::new(LdTarget::HLIAddr, LdTarget::A).execute(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x01);
     }
 
@@ -119,16 +92,13 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_hl(0x25);
         cpu.registers.set_a(0x29);
-
-        let op = Ld::new(LdTarget::HLDAddr, LdTarget::A, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld::new(LdTarget::HLDAddr, LdTarget::A).execute(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x24);
     }
 
     #[test]
     fn display_trait() {
-        let op = Ld::new(LdTarget::A, LdTarget::B, CYCLE_COUNT);
+        let op = Ld::new(LdTarget::A, LdTarget::B);
         assert_eq!(format!("{op}"), "LD A,B");
     }
 }

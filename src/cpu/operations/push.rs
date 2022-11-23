@@ -5,18 +5,17 @@ use super::operation::Operation;
 use super::targets::PushPopTarget;
 
 pub struct Push {
-    cycles: u8,
     src: PushPopTarget,
 }
 
 impl Push {
-    pub fn new(src: PushPopTarget, cycles: u8) -> Self {
-        Push { cycles, src }
+    pub fn new(src: PushPopTarget) -> Self {
+        Push { src }
     }
 }
 
 impl Operation for Push {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let qq = self.src.value(cpu);
         let qq_h = (qq & 0x00FF) as u8;
         let qq_l = (qq >> 8) as u8;
@@ -25,8 +24,6 @@ impl Operation for Push {
         cpu.mmu.set_byte(cpu.registers.sp(), qq_h);
         cpu.registers.decr_sp();
         cpu.mmu.set_byte(cpu.registers.sp(), qq_l);
-
-        self.cycles
     }
 }
 
@@ -40,16 +37,11 @@ impl fmt::Display for Push {
 mod test {
     use crate::memory::address_space::AddressSpace;
     use crate::memory::ram::Ram;
-    use crate::memory::void::Void;
 
     use super::Cpu;
     use super::Operation;
     use super::Push;
     use super::PushPopTarget;
-
-    fn empty() -> Cpu {
-        Cpu::new(Void)
-    }
 
     fn with_ram(data: Vec<u8>) -> Cpu {
         let mut ram = Ram::new(0, data.len() as u16);
@@ -59,22 +51,9 @@ mod test {
         Cpu::new(ram)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-        let op = Push::new(PushPopTarget::BC, CYCLE_COUNT);
-        let res = op.execute(&mut cpu);
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn display_trait() {
-        let op = Push::new(PushPopTarget::BC, CYCLE_COUNT);
+        let op = Push::new(PushPopTarget::BC);
         assert_eq!(format!("{op}"), "PUSH BC");
     }
 
@@ -89,7 +68,7 @@ mod test {
         cpu.registers.set_sp(0xFFFE);
 
         // PUSH BC
-        Push::new(PushPopTarget::BC, CYCLE_COUNT).execute(&mut cpu);
+        Push::new(PushPopTarget::BC).execute(&mut cpu);
 
         // (FFFDh) ← B, (FFFCh) ← B, SP ← FFFCh
         assert_eq!(cpu.mmu.get_byte(0xFFFD), cpu.registers.c());

@@ -6,17 +6,16 @@ use super::targets::ArithmeticTarget8Bit;
 
 pub struct And {
     target: ArithmeticTarget8Bit,
-    cycles: u8,
 }
 
 impl And {
-    pub fn new(target: ArithmeticTarget8Bit, cycles: u8) -> Self {
-        And { target, cycles }
+    pub fn new(target: ArithmeticTarget8Bit) -> Self {
+        And { target }
     }
 }
 
 impl Operation for And {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let new_value = cpu.registers.a() & value;
 
@@ -27,8 +26,6 @@ impl Operation for And {
 
         // Set result in accumulator
         cpu.registers.set_a(new_value);
-
-        self.cycles
     }
 }
 
@@ -51,32 +48,12 @@ mod test {
         Cpu::new(Void)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        let res = op.execute(&mut cpu);
-
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn ands_register_with_accumulator() {
         let mut cpu = empty();
         cpu.registers.set_a(0x11);
         cpu.registers.set_c(0x01);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x01);
     }
 
@@ -85,11 +62,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x00);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -98,11 +71,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x01);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -111,11 +80,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.n_flag());
     }
 
@@ -124,11 +89,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -137,17 +98,13 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x0F);
         cpu.registers.set_c(0x01);
-
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
     #[test]
     fn display_trait() {
-        let op = And::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = And::new(ArithmeticTarget8Bit::C);
         assert_eq!(format!("{op}"), "AND C");
     }
 
@@ -160,9 +117,7 @@ mod test {
         cpu.registers.set_l(0x3F);
 
         // AND L
-        let op = And::new(ArithmeticTarget8Bit::L, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::L).execute(&mut cpu);
 
         // A←1Ah,Z←0,H←1,N←0 CY←0
         assert_eq!(cpu.registers.a(), 0x1A);

@@ -6,12 +6,11 @@ use super::targets::ArithmeticTarget8Bit;
 
 pub struct Adc {
     target: ArithmeticTarget8Bit,
-    cycles: u8,
 }
 
 impl Adc {
-    pub fn new(target: ArithmeticTarget8Bit, cycles: u8) -> Self {
-        Adc { target, cycles }
+    pub fn new(target: ArithmeticTarget8Bit) -> Self {
+        Adc { target }
     }
 
     // TODO: This is awful... There must be a better way!?
@@ -30,7 +29,7 @@ impl Adc {
 }
 
 impl Operation for Adc {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
 
         let (new_value, did_overflow) =
@@ -44,8 +43,6 @@ impl Operation for Adc {
 
         // Set result in accumulator
         cpu.registers.set_a(new_value);
-
-        self.cycles
     }
 }
 
@@ -68,33 +65,13 @@ mod test {
         Cpu::new(Void)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        let res = op.execute(&mut cpu);
-
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn adds_register_and_carry_flag_to_accumulator() {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x02);
         cpu.registers.set_cy_flag(true);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x04);
     }
 
@@ -104,11 +81,7 @@ mod test {
         cpu.registers.set_a(0xF0);
         cpu.registers.set_c(0x0F);
         cpu.registers.set_cy_flag(true);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -118,11 +91,7 @@ mod test {
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(true);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -132,11 +101,7 @@ mod test {
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
         cpu.registers.set_cy_flag(true);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.n_flag());
     }
 
@@ -146,11 +111,7 @@ mod test {
         cpu.registers.set_a(0xFF);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(cpu.registers.cy_flag());
     }
 
@@ -160,11 +121,7 @@ mod test {
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -174,11 +131,7 @@ mod test {
         cpu.registers.set_a(0x0F);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -188,17 +141,13 @@ mod test {
         cpu.registers.set_a(0x0E);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
-
+        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
     #[test]
     fn display_trait() {
-        let op = Adc::new(ArithmeticTarget8Bit::C, CYCLE_COUNT);
+        let op = Adc::new(ArithmeticTarget8Bit::C);
         assert_eq!(format!("{op}"), "ADC A,C");
     }
 
@@ -212,9 +161,7 @@ mod test {
         cpu.registers.set_cy_flag(true);
 
         // ADC A, E
-        let op = Adc::new(ArithmeticTarget8Bit::E, CYCLE_COUNT);
-
-        op.execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::E).execute(&mut cpu);
 
         // A←F1h,Z←0,H←1,CY←0
         assert_eq!(cpu.registers.a(), 0xF1);

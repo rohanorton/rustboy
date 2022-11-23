@@ -3,18 +3,10 @@ use std::fmt;
 use super::super::cpu::Cpu;
 use super::operation::Operation;
 
-pub struct AddSp {
-    cycles: u8,
-}
-
-impl AddSp {
-    pub fn new(cycles: u8) -> Self {
-        AddSp { cycles }
-    }
-}
+pub struct AddSp;
 
 impl Operation for AddSp {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let r8 = cpu.read_u8() as i8;
         let a = cpu.registers.sp();
         let b = r8 as u16;
@@ -25,8 +17,6 @@ impl Operation for AddSp {
         cpu.registers
             .set_h_flag((a & 0x000f) + (b & 0x000f) > 0x000f);
         cpu.registers.set_sp(a.wrapping_add(b));
-
-        self.cycles
     }
 }
 
@@ -41,15 +31,10 @@ mod test {
 
     use crate::memory::address_space::AddressSpace;
     use crate::memory::ram::Ram;
-    use crate::memory::void::Void;
 
     use super::AddSp;
     use super::Cpu;
     use super::Operation;
-
-    fn empty() -> Cpu {
-        Cpu::new(Void)
-    }
 
     fn with_ram(data: Vec<u8>) -> Cpu {
         let mut ram = Ram::new(0, data.len() as u16);
@@ -59,26 +44,12 @@ mod test {
         Cpu::new(ram)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-        let op = AddSp::new(CYCLE_COUNT);
-        let res = op.execute(&mut cpu);
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn adds_byte_to_sp() {
         let mut cpu = with_ram(vec![0x41]);
         cpu.registers.set_pc(0x0000); // ensure first byte read
         cpu.registers.set_sp(0x010F);
-        let op = AddSp::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        AddSp.execute(&mut cpu);
         assert_eq!(cpu.registers.sp(), 0x0150);
     }
 
@@ -89,14 +60,13 @@ mod test {
         let mut cpu = with_ram(vec![neg_two]);
         cpu.registers.set_pc(0x0000); // ensure first byte read
         cpu.registers.set_sp(0x010F);
-        let op = AddSp::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        AddSp.execute(&mut cpu);
         assert_eq!(cpu.registers.sp(), 0x010D);
     }
 
     #[test]
     fn display_trait() {
-        let op = AddSp::new(CYCLE_COUNT);
+        let op = AddSp;
         assert_eq!(format!("{op}"), "ADD SP,r8");
     }
 
@@ -110,7 +80,7 @@ mod test {
         cpu.registers.set_sp(0xFFF8);
 
         // ADDSP,2
-        AddSp::new(CYCLE_COUNT).execute(&mut cpu);
+        AddSp.execute(&mut cpu);
 
         // SP←0xFFFA,CY←0,H←0,N←0,Z←0
         assert_eq!(cpu.registers.sp(), 0xFFFA);

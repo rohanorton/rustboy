@@ -7,18 +7,10 @@ use crate::byte::lower_nibble;
 // Decimal adjust register A.
 // This instruction adjusts register A so that the correct representation
 // of Binary Coded Decimal (BCD) is obtained.
-pub struct Daa {
-    cycles: u8,
-}
-
-impl Daa {
-    pub fn new(cycles: u8) -> Self {
-        Daa { cycles }
-    }
-}
+pub struct Daa;
 
 impl Operation for Daa {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let a = cpu.registers.a();
         let is_addition = !cpu.registers.n_flag();
         let has_half_carried = cpu.registers.h_flag();
@@ -48,8 +40,6 @@ impl Operation for Daa {
         cpu.registers.set_cy_flag(adjustment >= 0x60);
         cpu.registers.set_z_flag(bcd_a == 0);
         cpu.registers.set_h_flag(false);
-
-        self.cycles
     }
 }
 
@@ -74,26 +64,12 @@ mod test {
         Cpu::new(Void)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-        let op = Daa::new(CYCLE_COUNT);
-        let res = op.execute(&mut cpu);
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn sets_zero_flag_if_a_reg_eq_0_at_start() {
         let mut cpu = empty();
         cpu.registers.set_f(0);
         cpu.registers.set_a(0);
-        let op = Daa::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -102,8 +78,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_f(0);
         cpu.registers.set_a(0x9A);
-        let op = Daa::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         assert_eq!(cpu.registers.a(), 0);
         assert!(cpu.registers.z_flag());
     }
@@ -112,8 +87,7 @@ mod test {
     fn unsets_zero_flag_if_ne_0() {
         let mut cpu = empty();
         cpu.registers.set_a(0x04);
-        let op = Daa::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -121,14 +95,13 @@ mod test {
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
         cpu.registers.set_h_flag(true);
-        let op = Daa::new(CYCLE_COUNT);
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
     #[test]
     fn display_trait() {
-        let op = Daa::new(CYCLE_COUNT);
+        let op = Daa;
         assert_eq!(format!("{op}"), "DAA");
     }
 
@@ -136,32 +109,28 @@ mod test {
     fn example_from_gameboy_programming_manual() {
         let mut cpu = empty();
 
-        let op = Daa::new(CYCLE_COUNT);
-
         // When A = 45h and B = 38h
         cpu.registers.set_a(0x45);
         cpu.registers.set_b(0x38);
 
         // ADD A,B
-        let add_op = Add::new(ArithmeticTarget8Bit::B, CYCLE_COUNT);
-        add_op.execute(&mut cpu);
+        Add::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
         // A←7Dh,N←0
         assert_eq!(cpu.registers.a(), 0x7D);
 
         // DAA
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         // A←7Dh+06h(83h),CY←0
         assert_eq!(cpu.registers.a(), 0x83);
         assert!(!cpu.registers.cy_flag());
 
         // SUB A,B
-        let sub_op = Sub::new(ArithmeticTarget8Bit::B, CYCLE_COUNT);
-        sub_op.execute(&mut cpu);
+        Sub::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
         // A←83h–38h(4Bh),N←1
         assert_eq!(cpu.registers.a(), 0x4B);
 
         // DAA
-        op.execute(&mut cpu);
+        Daa.execute(&mut cpu);
         // A←4Bh+FAh(45h)
         assert_eq!(cpu.registers.a(), 0x45);
     }

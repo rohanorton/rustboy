@@ -18,8 +18,9 @@ impl Cpu {
     }
 
     fn _execute(&mut self, op_code: u8) {
-        let op = lookup_op_code(op_code);
-        self._remaining_cycles = op.execute(self);
+        let (op, cycles) = lookup_op_code(op_code);
+        self._remaining_cycles = cycles;
+        op.execute(self);
     }
 
     pub fn read_u8(&mut self) -> u8 {
@@ -29,9 +30,9 @@ impl Cpu {
     }
 
     pub fn read_u16(&mut self) -> u16 {
-        let l = self.read_u8();
-        let h = self.read_u8();
-        ((h as u16) << 8) | l as u16
+        let l = self.read_u8() as u16;
+        let h = self.read_u8() as u16;
+        (h << 8) | l
     }
 }
 
@@ -50,24 +51,19 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x0001);
         cpu.registers.set_c(0x0002);
-
         let op_code = 0x81; // ADD A, C
-
         cpu._execute(op_code);
-
         assert_eq!(cpu.registers.a(), 0x0003);
     }
 
     #[test]
     fn executing_op_code_updates_remaining_cycles() {
         let mut cpu = empty();
-
         let op_code = 0x81; // ADD A, C
         assert_eq!(
             cpu._remaining_cycles, 0,
             "Remaining cycles should initially be 0"
         );
-
         cpu._execute(op_code);
         assert_eq!(
             cpu._remaining_cycles, 4,

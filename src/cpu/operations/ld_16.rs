@@ -5,22 +5,20 @@ use super::operation::Operation;
 use super::targets::Ld16Target;
 
 pub struct Ld16 {
-    cycles: u8,
     dest: Ld16Target,
     src: Ld16Target,
 }
 
 impl Ld16 {
-    pub fn new(dest: Ld16Target, src: Ld16Target, cycles: u8) -> Self {
-        Ld16 { cycles, dest, src }
+    pub fn new(dest: Ld16Target, src: Ld16Target) -> Self {
+        Ld16 { dest, src }
     }
 }
 
 impl Operation for Ld16 {
-    fn execute(&self, cpu: &mut Cpu) -> u8 {
+    fn execute(&self, cpu: &mut Cpu) {
         let value = self.src.value(cpu);
         self.dest.set_value(cpu, value);
-        self.cycles
     }
 }
 
@@ -53,34 +51,18 @@ mod test {
         Cpu::new(ram)
     }
 
-    const CYCLE_COUNT: u8 = 4;
-
-    #[test]
-    fn returns_cycle_count() {
-        let mut cpu = empty();
-        let op = Ld16::new(Ld16Target::BC, Ld16Target::HL, CYCLE_COUNT);
-        let res = op.execute(&mut cpu);
-        assert_eq!(
-            res, CYCLE_COUNT,
-            "Returned value should match cycle count passed to constructor"
-        );
-    }
-
     #[test]
     fn loads_value_from_one_register_into_another() {
         let mut cpu = empty();
         cpu.registers.set_bc(0x0000);
         cpu.registers.set_hl(0x1234);
-
-        let op = Ld16::new(Ld16Target::BC, Ld16Target::HL, CYCLE_COUNT);
-        op.execute(&mut cpu);
-
+        Ld16::new(Ld16Target::BC, Ld16Target::HL).execute(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x1234);
     }
 
     #[test]
     fn display_trait() {
-        let op = Ld16::new(Ld16Target::BC, Ld16Target::D16, CYCLE_COUNT);
+        let op = Ld16::new(Ld16Target::BC, Ld16Target::D16);
         assert_eq!(format!("{op}"), "LD BC,d16");
     }
 
@@ -98,8 +80,7 @@ mod test {
         cpu.registers.set_sp(0xFFF8);
 
         // LD (C100h),SP
-        let op = Ld16::new(Ld16Target::A16, Ld16Target::SP, CYCLE_COUNT);
-        op.execute(&mut cpu);
+        Ld16::new(Ld16Target::A16, Ld16Target::SP).execute(&mut cpu);
 
         // C100h ← F8h
         assert_eq!(cpu.mmu.get_byte(0xC100), 0xF8);
