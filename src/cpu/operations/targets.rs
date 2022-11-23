@@ -226,3 +226,61 @@ impl fmt::Display for LdTarget {
         )
     }
 }
+
+pub enum Ld16Target {
+    BC,
+    DE,
+    HL,
+    SP,
+    D16,
+    A16,
+}
+
+impl Ld16Target {
+    pub fn value(&self, cpu: &mut Cpu) -> u16 {
+        match self {
+            Self::BC => cpu.registers.bc(),
+            Self::DE => cpu.registers.de(),
+            Self::HL => cpu.registers.hl(),
+            Self::SP => cpu.registers.sp(),
+            Self::D16 => cpu.read_u16(),
+            Self::A16 => panic!("Cannot read u16 from address"),
+        }
+    }
+
+    pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
+        match self {
+            Self::BC => cpu.registers.set_bc(val),
+            Self::DE => cpu.registers.set_de(val),
+            Self::HL => cpu.registers.set_hl(val),
+            Self::SP => cpu.registers.set_sp(val),
+            Self::D16 => panic!("Cannot write to address"),
+            Self::A16 => {
+                // Stores the lower byte at address nn specified by the 16-bit
+                // immediate operand nn and the upper byte at address nn + 1.
+                let nn = cpu.read_u16();
+                let upper = (val >> 8) as u8;
+                let lower = (val & 0x00FF) as u8;
+                cpu.mmu.set_byte(nn, lower);
+                cpu.mmu.set_byte(nn + 1, upper);
+            }
+        };
+    }
+}
+
+impl fmt::Display for Ld16Target {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::BC => "BC",
+                Self::DE => "DE",
+                Self::HL => "HL",
+                Self::SP => "SP",
+                Self::D16 => "d16",
+                Self::A16 => "(a16)",
+            }
+        )
+    }
+}

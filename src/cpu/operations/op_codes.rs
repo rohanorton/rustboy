@@ -1,5 +1,6 @@
+use super::ld_16::Ld16;
 use super::operation::Operation;
-use super::targets::{ArithmeticTarget16Bit, ArithmeticTarget8Bit, LdTarget};
+use super::targets::{ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget};
 
 use super::adc::Adc;
 use super::add::Add;
@@ -35,13 +36,14 @@ macro_rules! boxed_operation {(
 pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
     boxed_operation!(op_code, {
         0x00 => Nop::new(4),
-
+        0x01 => Ld16::new (Ld16Target::BC, Ld16Target::D16, 12),
         0x02 => Ld::new (LdTarget::BCAddr, LdTarget::A, 8),
         0x03 => Inc16::new(ArithmeticTarget16Bit::BC, 8),
         0x04 => Inc::new(ArithmeticTarget8Bit::B, 4),
         0x05 => Dec::new(ArithmeticTarget8Bit::B, 4),
         0x06 => Ld::new (LdTarget::B, LdTarget::D8, 8),
 
+        0x08 => Ld16::new (Ld16Target::A16, Ld16Target::SP, 20),
         0x09 => AddHl::new(ArithmeticTarget16Bit::BC, 8),
         0x0A => Ld::new (LdTarget::A, LdTarget::BCAddr, 8),
         0x0B => Dec16::new(ArithmeticTarget16Bit::BC, 8),
@@ -49,6 +51,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0x0D => Dec::new(ArithmeticTarget8Bit::C, 4),
         0x0E => Ld::new (LdTarget::C, LdTarget::D8, 8),
 
+        0x11 => Ld16::new (Ld16Target::DE, Ld16Target::D16, 12),
         0x12 => Ld::new (LdTarget::DEAddr, LdTarget::A, 8),
         0x13 => Inc16::new(ArithmeticTarget16Bit::DE, 8),
         0x14 => Inc::new(ArithmeticTarget8Bit::D, 4),
@@ -62,6 +65,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0x1D => Dec::new(ArithmeticTarget8Bit::E, 4),
         0x1E => Ld::new (LdTarget::E, LdTarget::D8, 8),
 
+        0x21 => Ld16::new (Ld16Target::HL, Ld16Target::D16, 12),
         0x22 => Ld::new (LdTarget::HLIAddr, LdTarget::A, 8),
         0x23 => Inc16::new(ArithmeticTarget16Bit::HL, 8),
         0x24 => Inc::new(ArithmeticTarget8Bit::H, 4),
@@ -77,6 +81,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0x2E => Ld::new (LdTarget::L, LdTarget::D8, 8),
         0x2F => Cpl::new(4),
 
+        0x31 => Ld16::new (Ld16Target::SP, Ld16Target::D16, 12),
         0x32 => Ld::new (LdTarget::HLDAddr, LdTarget::A, 8),
         0x33 => Inc16::new(ArithmeticTarget16Bit::SP, 8),
         0x34 => Inc::new(ArithmeticTarget8Bit::HLAddr, 12),
@@ -258,6 +263,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0xF6 => Or::new(ArithmeticTarget8Bit::D8, 8),
 
+        0xF9 => Ld16::new (Ld16Target::SP, Ld16Target::HL, 8),
         0xFA => Ld::new (LdTarget::A16, LdTarget::A, 16),
 
         0xFE => Cp::new(ArithmeticTarget8Bit::D8, 8),
