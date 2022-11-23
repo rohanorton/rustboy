@@ -1,5 +1,5 @@
 use super::operation::Operation;
-use super::targets::ArithmeticTarget8Bit;
+use super::targets::{ArithmeticTarget16Bit, ArithmeticTarget8Bit};
 
 use super::adc::Adc;
 use super::add::Add;
@@ -10,6 +10,7 @@ use super::cpl::Cpl;
 use super::daa::Daa;
 use super::dec::Dec;
 use super::inc::Inc;
+use super::inc_16::Inc16;
 use super::nop::Nop;
 use super::or::Or;
 use super::sbc::Sbc;
@@ -31,18 +32,21 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
     boxed_operation!(op_code, {
         0x00 => Nop::new(4),
 
+        0x03 => Inc16::new(ArithmeticTarget16Bit::BC, 8),
         0x04 => Inc::new(ArithmeticTarget8Bit::B, 4),
         0x05 => Dec::new(ArithmeticTarget8Bit::B, 4),
 
         0x0C => Inc::new(ArithmeticTarget8Bit::C, 4),
         0x0D => Dec::new(ArithmeticTarget8Bit::C, 4),
 
+        0x13 => Inc16::new(ArithmeticTarget16Bit::DE, 8),
         0x14 => Inc::new(ArithmeticTarget8Bit::D, 4),
         0x15 => Dec::new(ArithmeticTarget8Bit::D, 4),
 
         0x1C => Inc::new(ArithmeticTarget8Bit::E, 4),
         0x1D => Dec::new(ArithmeticTarget8Bit::E, 4),
 
+        0x23 => Inc16::new(ArithmeticTarget16Bit::HL, 8),
         0x24 => Inc::new(ArithmeticTarget8Bit::H, 4),
         0x25 => Dec::new(ArithmeticTarget8Bit::H, 4),
 
@@ -53,6 +57,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0x2F => Cpl::new(4),
 
+        0x33 => Inc16::new(ArithmeticTarget16Bit::SP, 8),
         0x34 => Inc::new(ArithmeticTarget8Bit::HLAddr, 12),
         0x35 => Dec::new(ArithmeticTarget8Bit::HLAddr, 12),
 

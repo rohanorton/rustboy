@@ -61,3 +61,44 @@ impl fmt::Display for ArithmeticTarget8Bit {
         )
     }
 }
+
+pub enum ArithmeticTarget16Bit {
+    BC,
+    DE,
+    HL,
+    SP,
+}
+
+impl ArithmeticTarget16Bit {
+    pub fn value(&self, cpu: &mut Cpu) -> u16 {
+        match self {
+            Self::BC => cpu.registers.bc(),
+            Self::DE => cpu.registers.de(),
+            Self::HL => cpu.registers.hl(),
+            Self::SP => cpu.registers.sp(),
+        }
+    }
+    pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
+        match self {
+            Self::BC => cpu.registers.set_bc(val),
+            Self::DE => cpu.registers.set_de(val),
+            Self::HL => cpu.registers.set_hl(val),
+            Self::SP => cpu.registers.set_sp(val),
+        };
+    }
+}
+
+impl fmt::Display for ArithmeticTarget16Bit {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::BC => "BC",
+                Self::DE => "DE",
+                Self::HL => "HL",
+                Self::SP => "SP",
+            }
+        )
+    }
+}
