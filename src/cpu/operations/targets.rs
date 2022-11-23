@@ -284,3 +284,36 @@ impl fmt::Display for Ld16Target {
         )
     }
 }
+
+pub enum PushPopTarget {
+    BC,
+    DE,
+    HL,
+    AF,
+}
+
+impl PushPopTarget {
+    pub fn value(&self, cpu: &mut Cpu) -> u16 {
+        match self {
+            Self::BC => cpu.registers.bc(),
+            Self::DE => cpu.registers.de(),
+            Self::HL => cpu.registers.hl(),
+            Self::AF => cpu.registers.af(),
+        }
+    }
+}
+
+impl fmt::Display for PushPopTarget {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::BC => "BC",
+                Self::DE => "DE",
+                Self::HL => "HL",
+                Self::AF => "AF",
+            }
+        )
+    }
+}

@@ -30,6 +30,7 @@ bitfield! {
 
     // Auxilary Register Pairs
     // 16-bit registers that function as data pointers.
+    pub u16, af, set_af: 127, 112;
     pub u16, bc, set_bc: 111, 96;
     pub u16, de, set_de: 95, 80;
     pub u16, hl, set_hl: 79, 64;

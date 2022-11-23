@@ -1,6 +1,8 @@
 use super::ld_16::Ld16;
 use super::operation::Operation;
-use super::targets::{ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget};
+use super::targets::{
+    ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget, PushPopTarget,
+};
 
 use super::adc::Adc;
 use super::add::Add;
@@ -18,6 +20,7 @@ use super::inc_16::Inc16;
 use super::ld::Ld;
 use super::nop::Nop;
 use super::or::Or;
+use super::push::Push;
 use super::sbc::Sbc;
 use super::scf::Scf;
 use super::sub::Sub;
@@ -237,10 +240,12 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0xBE => Cp::new(ArithmeticTarget8Bit::HLAddr, 8),
         0xBF => Cp::new(ArithmeticTarget8Bit::A, 4),
 
+        0xC5 => Push::new(PushPopTarget::BC, 16),
         0xC6 => Add::new(ArithmeticTarget8Bit::D8, 8),
 
         0xCE => Adc::new(ArithmeticTarget8Bit::D8, 8),
 
+        0xD5 => Push::new(PushPopTarget::DE, 16),
         0xD6 => Sub::new(ArithmeticTarget8Bit::D8, 8),
 
         0xDE => Sbc::new(ArithmeticTarget8Bit::D8, 8),
@@ -249,6 +254,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0xE2 => Ld::new (LdTarget::CAddr, LdTarget::A, 8),
 
+        0xE5 => Push::new(PushPopTarget::HL, 16),
         0xE6 => And::new(ArithmeticTarget8Bit::D8, 8),
 
         0xE8 => AddSp::new(16),
@@ -261,6 +267,7 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
 
         0xF2 => Ld::new (LdTarget::A, LdTarget::CAddr, 8),
 
+        0xF5 => Push::new(PushPopTarget::AF, 16),
         0xF6 => Or::new(ArithmeticTarget8Bit::D8, 8),
 
         0xF9 => Ld16::new (Ld16Target::SP, Ld16Target::HL, 8),
