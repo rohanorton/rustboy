@@ -4,6 +4,7 @@ use super::targets::{ArithmeticTarget16Bit, ArithmeticTarget8Bit};
 use super::adc::Adc;
 use super::add::Add;
 use super::add_hl::AddHl;
+use super::add_sp::AddSp;
 use super::and::And;
 use super::ccf::Ccf;
 use super::cp::Cp;
@@ -163,6 +164,8 @@ pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
         0xDE => Sbc::new(ArithmeticTarget8Bit::D8, 8),
 
         0xE6 => And::new(ArithmeticTarget8Bit::D8, 8),
+
+        0xE8 => AddSp::new(16),
 
         0xEE => Xor::new(ArithmeticTarget8Bit::D8, 8),
 

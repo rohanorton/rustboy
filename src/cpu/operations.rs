@@ -1,6 +1,7 @@
 pub mod adc;
 pub mod add;
 pub mod add_hl;
+pub mod add_sp;
 pub mod and;
 pub mod ccf;
 pub mod cp;
