@@ -7,6 +7,7 @@ pub mod cpl;
 pub mod daa;
 pub mod dec;
 pub mod inc;
+pub mod nop;
 pub mod op_codes;
 pub mod operation;
 pub mod or;

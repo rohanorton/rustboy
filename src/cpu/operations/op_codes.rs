@@ -10,6 +10,7 @@ use super::cpl::Cpl;
 use super::daa::Daa;
 use super::dec::Dec;
 use super::inc::Inc;
+use super::nop::Nop;
 use super::or::Or;
 use super::sbc::Sbc;
 use super::scf::Scf;
@@ -28,6 +29,8 @@ macro_rules! boxed_operation {(
 
 pub fn lookup_op_code(op_code: u8) -> Box<dyn Operation> {
     boxed_operation!(op_code, {
+        0x00 => Nop::new(4),
+
         0x04 => Inc::new(ArithmeticTarget8Bit::B, 4),
         0x05 => Dec::new(ArithmeticTarget8Bit::B, 4),
 
