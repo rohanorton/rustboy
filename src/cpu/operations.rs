@@ -6,6 +6,7 @@ pub mod cp;
 pub mod cpl;
 pub mod daa;
 pub mod dec;
+pub mod dec_16;
 pub mod inc;
 pub mod inc_16;
 pub mod nop;
