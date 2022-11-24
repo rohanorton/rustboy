@@ -21,6 +21,7 @@ pub mod pop;
 pub mod push;
 pub mod rla;
 pub mod rlca;
+pub mod rra;
 pub mod rrca;
 pub mod sbc;
 pub mod scf;

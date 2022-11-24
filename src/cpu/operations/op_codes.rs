@@ -24,6 +24,7 @@ use super::pop::Pop;
 use super::push::Push;
 use super::rla::Rla;
 use super::rlca::Rlca;
+use super::rra::Rra;
 use super::rrca::Rrca;
 use super::sbc::Sbc;
 use super::scf::Scf;
@@ -73,6 +74,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x1C => Inc::new(ArithmeticTarget8Bit::E), 4;
         0x1D => Dec::new(ArithmeticTarget8Bit::E), 4;
         0x1E => Ld::new (LdTarget::E, LdTarget::D8), 8;
+        0x1F => Rra, 4;
 
         0x21 => Ld16::new (Ld16Target::HL, Ld16Target::D16), 12;
         0x22 => Ld::new (LdTarget::HLIAddr, LdTarget::A), 8;
