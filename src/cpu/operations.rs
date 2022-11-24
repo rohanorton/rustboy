@@ -31,6 +31,7 @@ pub mod prefix_cb;
 pub mod push;
 pub mod res;
 pub mod ret;
+pub mod ret_cond;
 pub mod rl;
 pub mod rla;
 pub mod rlc;
