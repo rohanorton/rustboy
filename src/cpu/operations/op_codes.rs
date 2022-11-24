@@ -21,6 +21,7 @@ use super::ld_16::Ld16;
 use super::nop::Nop;
 use super::or::Or;
 use super::pop::Pop;
+use super::prefix_cb::PrefixCB;
 use super::push::Push;
 use super::rla::Rla;
 use super::rlca::Rlca;
@@ -252,6 +253,8 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
 
         0xC5 => Push::new(PushPopTarget::BC), 16;
         0xC6 => Add::new(ArithmeticTarget8Bit::D8), 8;
+
+        0xCB => PrefixCB, 4;
 
         0xCE => Adc::new(ArithmeticTarget8Bit::D8), 8;
 
