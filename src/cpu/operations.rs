@@ -43,6 +43,7 @@ pub mod rr;
 pub mod rra;
 pub mod rrc;
 pub mod rrca;
+pub mod rst;
 pub mod sbc;
 pub mod scf;
 pub mod set;

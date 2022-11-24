@@ -39,6 +39,7 @@ use super::rla::Rla;
 use super::rlca::Rlca;
 use super::rra::Rra;
 use super::rrca::Rrca;
+use super::rst::Rst;
 use super::sbc::Sbc;
 use super::scf::Scf;
 use super::sub::Sub;
@@ -270,7 +271,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xC4 => ConditionalCall::new(Condition::NZ), 24;
         0xC5 => Push::new(PushPopTarget::BC), 16;
         0xC6 => Add::new(ArithmeticTarget8Bit::D8), 8;
-
+        0xC7 => Rst::new(0x00), 16;
         0xC8 => ConditionalRet::new(Condition::Z), 20;
         0xC9 => Ret, 16;
         0xCA => ConditionalJp::new(Condition::Z, AddressTarget::A16), 16;
@@ -278,6 +279,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xCC => ConditionalCall::new(Condition::Z), 24;
         0xCD => Call, 24;
         0xCE => Adc::new(ArithmeticTarget8Bit::D8), 8;
+        0xCF => Rst::new(0x08), 16;
 
         0xD0 => ConditionalRet::new(Condition::NC), 20;
         0xD1 => Pop::new(PushPopTarget::DE), 12;
@@ -286,7 +288,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xD4 => ConditionalCall::new(Condition::NC), 24;
         0xD5 => Push::new(PushPopTarget::DE), 16;
         0xD6 => Sub::new(ArithmeticTarget8Bit::D8), 8;
-
+        0xD7 => Rst::new(0x10), 16;
         0xD8 => ConditionalRet::new(Condition::C), 20;
         0xD9 => Reti, 16;
         0xDA => ConditionalJp::new(Condition::C, AddressTarget::A16), 16;
@@ -294,6 +296,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xDC => ConditionalCall::new(Condition::C), 24;
 
         0xDE => Sbc::new(ArithmeticTarget8Bit::D8), 8;
+        0xDF => Rst::new(0x18), 16;
 
         0xE0 => Ld::new(LdTarget::A8, LdTarget::A), 12;
         0xE1 => Pop::new(PushPopTarget::HL), 12;
@@ -301,12 +304,13 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
 
         0xE5 => Push::new(PushPopTarget::HL), 16;
         0xE6 => And::new(ArithmeticTarget8Bit::D8), 8;
-
+        0xE7 => Rst::new(0x20), 16;
         0xE8 => AddSp, 16;
         0xE9 => Jp::new(AddressTarget::HLAddr), 4;
         0xEA => Ld::new(LdTarget::A, LdTarget::A16), 16;
 
         0xEE => Xor::new(ArithmeticTarget8Bit::D8), 8;
+        0xEF => Rst::new(0x28), 16;
 
         0xF0 => Ld::new(LdTarget::A, LdTarget::A8), 12;
         0xF1 => Pop::new(PushPopTarget::AF), 12;
@@ -315,11 +319,13 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
 
         0xF5 => Push::new(PushPopTarget::AF), 16;
         0xF6 => Or::new(ArithmeticTarget8Bit::D8), 8;
+        0xF7 => Rst::new(0x30), 16;
 
         0xF9 => Ld16::new(Ld16Target::SP, Ld16Target::HL), 8;
         0xFA => Ld::new(LdTarget::A16, LdTarget::A), 16;
         0xFB => Ei, 4;
 
         0xFE => Cp::new(ArithmeticTarget8Bit::D8), 8;
+        0xFF => Rst::new(0x38), 16;
     })
 }
