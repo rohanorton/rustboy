@@ -5,6 +5,7 @@ pub mod add_sp;
 pub mod and;
 pub mod bit;
 pub mod call;
+pub mod call_cond;
 pub mod ccf;
 pub mod condition;
 pub mod cp;

@@ -10,6 +10,7 @@ use super::add_hl::AddHl;
 use super::add_sp::AddSp;
 use super::and::And;
 use super::call::Call;
+use super::call_cond::ConditionalCall;
 use super::ccf::Ccf;
 use super::cp::Cp;
 use super::cpl::Cpl;
@@ -260,23 +261,26 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xC1 => Pop::new(PushPopTarget::BC), 12;
         0xC2 => ConditionalJp::new(Condition::NZ, AddressTarget::A16), 16;
         0xC3 => Jp::new(AddressTarget::A16), 16;
-
+        0xC4 => ConditionalCall::new(Condition::NZ), 24;
         0xC5 => Push::new(PushPopTarget::BC), 16;
         0xC6 => Add::new(ArithmeticTarget8Bit::D8), 8;
 
         0xCA => ConditionalJp::new(Condition::Z, AddressTarget::A16), 16;
         0xCB => PrefixCB, 4;
-
+        0xCC => ConditionalCall::new(Condition::Z), 24;
         0xCD => Call, 24;
         0xCE => Adc::new(ArithmeticTarget8Bit::D8), 8;
 
         0xD1 => Pop::new(PushPopTarget::DE), 12;
         0xD2 => ConditionalJp::new(Condition::NC, AddressTarget::A16), 16;
 
+        0xD4 => ConditionalCall::new(Condition::NC), 24;
         0xD5 => Push::new(PushPopTarget::DE), 16;
         0xD6 => Sub::new(ArithmeticTarget8Bit::D8), 8;
 
         0xDA => ConditionalJp::new(Condition::C, AddressTarget::A16), 16;
+
+        0xDC => ConditionalCall::new(Condition::C), 24;
 
         0xDE => Sbc::new(ArithmeticTarget8Bit::D8), 8;
 
