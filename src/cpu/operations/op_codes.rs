@@ -17,6 +17,7 @@ use super::cpl::Cpl;
 use super::daa::Daa;
 use super::dec::Dec;
 use super::dec_16::Dec16;
+use super::di::Di;
 use super::ei::Ei;
 use super::inc::Inc;
 use super::inc_16::Inc16;
@@ -309,6 +310,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xF0 => Ld::new(LdTarget::A, LdTarget::A8), 12;
         0xF1 => Pop::new(PushPopTarget::AF), 12;
         0xF2 => Ld::new(LdTarget::A, LdTarget::CAddr), 8;
+        0xF3 => Di, 4;
 
         0xF5 => Push::new(PushPopTarget::AF), 16;
         0xF6 => Or::new(ArithmeticTarget8Bit::D8), 8;
