@@ -2,6 +2,7 @@ use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
 
 use super::bit::Bit;
+use super::res::Res;
 use super::rl::Rl;
 use super::rlc::Rlc;
 use super::rr::Rr;
@@ -158,5 +159,73 @@ pub fn lookup_extended_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x7D => Bit::new(7, ArithmeticTarget8Bit::L), 8;
         0x7E => Bit::new(7, ArithmeticTarget8Bit::HLAddr), 16;
         0x7F => Bit::new(7, ArithmeticTarget8Bit::A), 8;
+
+        0x80 => Res::new(0, ArithmeticTarget8Bit::B), 8;
+        0x81 => Res::new(0, ArithmeticTarget8Bit::C), 8;
+        0x82 => Res::new(0, ArithmeticTarget8Bit::D), 8;
+        0x83 => Res::new(0, ArithmeticTarget8Bit::E), 8;
+        0x84 => Res::new(0, ArithmeticTarget8Bit::H), 8;
+        0x85 => Res::new(0, ArithmeticTarget8Bit::L), 8;
+        0x86 => Res::new(0, ArithmeticTarget8Bit::HLAddr), 16;
+        0x87 => Res::new(0, ArithmeticTarget8Bit::A), 8;
+        0x88 => Res::new(1, ArithmeticTarget8Bit::B), 8;
+        0x89 => Res::new(1, ArithmeticTarget8Bit::C), 8;
+        0x8A => Res::new(1, ArithmeticTarget8Bit::D), 8;
+        0x8B => Res::new(1, ArithmeticTarget8Bit::E), 8;
+        0x8C => Res::new(1, ArithmeticTarget8Bit::H), 8;
+        0x8D => Res::new(1, ArithmeticTarget8Bit::L), 8;
+        0x8E => Res::new(1, ArithmeticTarget8Bit::HLAddr), 16;
+        0x8F => Res::new(1, ArithmeticTarget8Bit::A), 8;
+
+        0x90 => Res::new(2, ArithmeticTarget8Bit::B), 8;
+        0x91 => Res::new(2, ArithmeticTarget8Bit::C), 8;
+        0x92 => Res::new(2, ArithmeticTarget8Bit::D), 8;
+        0x93 => Res::new(2, ArithmeticTarget8Bit::E), 8;
+        0x94 => Res::new(2, ArithmeticTarget8Bit::H), 8;
+        0x95 => Res::new(2, ArithmeticTarget8Bit::L), 8;
+        0x96 => Res::new(2, ArithmeticTarget8Bit::HLAddr), 16;
+        0x97 => Res::new(2, ArithmeticTarget8Bit::A), 8;
+        0x98 => Res::new(3, ArithmeticTarget8Bit::B), 8;
+        0x99 => Res::new(3, ArithmeticTarget8Bit::C), 8;
+        0x9A => Res::new(3, ArithmeticTarget8Bit::D), 8;
+        0x9B => Res::new(3, ArithmeticTarget8Bit::E), 8;
+        0x9C => Res::new(3, ArithmeticTarget8Bit::H), 8;
+        0x9D => Res::new(3, ArithmeticTarget8Bit::L), 8;
+        0x9E => Res::new(3, ArithmeticTarget8Bit::HLAddr), 16;
+        0x9F => Res::new(3, ArithmeticTarget8Bit::A), 8;
+
+        0xA0 => Res::new(4, ArithmeticTarget8Bit::B), 8;
+        0xA1 => Res::new(4, ArithmeticTarget8Bit::C), 8;
+        0xA2 => Res::new(4, ArithmeticTarget8Bit::D), 8;
+        0xA3 => Res::new(4, ArithmeticTarget8Bit::E), 8;
+        0xA4 => Res::new(4, ArithmeticTarget8Bit::H), 8;
+        0xA5 => Res::new(4, ArithmeticTarget8Bit::L), 8;
+        0xA6 => Res::new(4, ArithmeticTarget8Bit::HLAddr), 16;
+        0xA7 => Res::new(4, ArithmeticTarget8Bit::A), 8;
+        0xA8 => Res::new(5, ArithmeticTarget8Bit::B), 8;
+        0xA9 => Res::new(5, ArithmeticTarget8Bit::C), 8;
+        0xAA => Res::new(5, ArithmeticTarget8Bit::D), 8;
+        0xAB => Res::new(5, ArithmeticTarget8Bit::E), 8;
+        0xAC => Res::new(5, ArithmeticTarget8Bit::H), 8;
+        0xAD => Res::new(5, ArithmeticTarget8Bit::L), 8;
+        0xAE => Res::new(5, ArithmeticTarget8Bit::HLAddr), 16;
+        0xAF => Res::new(5, ArithmeticTarget8Bit::A), 8;
+
+        0xB0 => Res::new(6, ArithmeticTarget8Bit::B), 8;
+        0xB1 => Res::new(6, ArithmeticTarget8Bit::C), 8;
+        0xB2 => Res::new(6, ArithmeticTarget8Bit::D), 8;
+        0xB3 => Res::new(6, ArithmeticTarget8Bit::E), 8;
+        0xB4 => Res::new(6, ArithmeticTarget8Bit::H), 8;
+        0xB5 => Res::new(6, ArithmeticTarget8Bit::L), 8;
+        0xB6 => Res::new(6, ArithmeticTarget8Bit::HLAddr), 16;
+        0xB7 => Res::new(6, ArithmeticTarget8Bit::A), 8;
+        0xB8 => Res::new(7, ArithmeticTarget8Bit::B), 8;
+        0xB9 => Res::new(7, ArithmeticTarget8Bit::C), 8;
+        0xBA => Res::new(7, ArithmeticTarget8Bit::D), 8;
+        0xBB => Res::new(7, ArithmeticTarget8Bit::E), 8;
+        0xBC => Res::new(7, ArithmeticTarget8Bit::H), 8;
+        0xBD => Res::new(7, ArithmeticTarget8Bit::L), 8;
+        0xBE => Res::new(7, ArithmeticTarget8Bit::HLAddr), 16;
+        0xBF => Res::new(7, ArithmeticTarget8Bit::A), 8;
     })
 }

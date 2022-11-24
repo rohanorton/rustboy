@@ -22,6 +22,7 @@ pub mod or;
 pub mod pop;
 pub mod prefix_cb;
 pub mod push;
+pub mod res;
 pub mod rl;
 pub mod rla;
 pub mod rlc;
