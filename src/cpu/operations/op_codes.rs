@@ -1,5 +1,6 @@
 use super::ld_16::Ld16;
 use super::operation::Operation;
+use super::rlca::Rlca;
 use super::targets::{
     ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget, PushPopTarget,
 };
@@ -46,7 +47,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x04 => Inc::new(ArithmeticTarget8Bit::B), 4;
         0x05 => Dec::new(ArithmeticTarget8Bit::B), 4;
         0x06 => Ld::new (LdTarget::B, LdTarget::D8), 8;
-
+        0x07 => Rlca, 4;
         0x08 => Ld16::new (Ld16Target::A16, Ld16Target::SP), 20;
         0x09 => AddHl::new(ArithmeticTarget16Bit::BC), 8;
         0x0A => Ld::new (LdTarget::A, LdTarget::BCAddr), 8;
