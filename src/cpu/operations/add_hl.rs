@@ -17,15 +17,15 @@ impl AddHl {
 impl Operation for AddHl {
     fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
-        let (new_value, did_carry) = cpu.registers.hl().overflowing_add(value);
+        let (new_value, did_carry) = cpu.reg.hl().overflowing_add(value);
 
-        cpu.registers.set_n_flag(false);
-        cpu.registers.set_cy_flag(did_carry);
-        cpu.registers.set_h_flag(false);
-        cpu.registers
-            .set_h_flag(((cpu.registers.hl() & 0xFFF) + (value & 0xFFF)) & 0x1000 != 0);
+        cpu.reg.set_n_flag(false);
+        cpu.reg.set_cy_flag(did_carry);
+        cpu.reg.set_h_flag(false);
+        cpu.reg
+            .set_h_flag(((cpu.reg.hl() & 0xFFF) + (value & 0xFFF)) & 0x1000 != 0);
 
-        cpu.registers.set_hl(new_value);
+        cpu.reg.set_hl(new_value);
     }
 }
 
@@ -51,10 +51,10 @@ mod test {
     #[test]
     fn increments_register() {
         let mut cpu = empty();
-        cpu.registers.set_bc(0x010F);
-        cpu.registers.set_hl(0x0201);
+        cpu.reg.set_bc(0x010F);
+        cpu.reg.set_hl(0x0201);
         AddHl::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
-        assert_eq!(cpu.registers.hl(), 0x0310);
+        assert_eq!(cpu.reg.hl(), 0x0310);
     }
 
     #[test]
@@ -68,17 +68,17 @@ mod test {
         let mut cpu = empty();
 
         // When HL = 8A23h, BC = 0605h,
-        cpu.registers.set_hl(0x8A23);
-        cpu.registers.set_bc(0x0605);
+        cpu.reg.set_hl(0x8A23);
+        cpu.reg.set_bc(0x0605);
 
         // ADDHL,BC
         AddHl::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
 
         // HL←9028h,H←1,N←0,CY←0
-        assert_eq!(cpu.registers.hl(), 0x9028);
-        assert!(cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(!cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.hl(), 0x9028);
+        assert!(cpu.reg.h_flag());
+        assert!(!cpu.reg.n_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 
     #[test]
@@ -86,15 +86,15 @@ mod test {
         let mut cpu = empty();
 
         // When HL = 8A23h
-        cpu.registers.set_hl(0x8A23);
+        cpu.reg.set_hl(0x8A23);
 
         // ADDHL,HL
         AddHl::new(ArithmeticTarget16Bit::HL).run(&mut cpu);
 
         // HL←1446h,H←1,N←0,CY←1
-        assert_eq!(cpu.registers.hl(), 0x1446);
-        assert!(cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.hl(), 0x1446);
+        assert!(cpu.reg.h_flag());
+        assert!(!cpu.reg.n_flag());
+        assert!(cpu.reg.cy_flag());
     }
 }

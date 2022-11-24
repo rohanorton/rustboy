@@ -60,37 +60,33 @@ mod test {
     fn example_1_from_gameboy_programming_manual() {
         let mut cpu = with_ram(vec![0x00; 0xffff]);
 
-        cpu.registers.set_z_flag(true);
+        cpu.reg.set_z_flag(true);
 
-        cpu.registers.set_pc(0x5000);
-        cpu.registers.set_sp(0xfffc);
+        cpu.reg.set_pc(0x5000);
+        cpu.reg.set_sp(0xfffc);
         cpu.mmu.set_byte(0xfffc, 0x03);
         cpu.mmu.set_byte(0xfffd, 0x80);
 
         // Condition met.
         ConditionalRet::new(Condition::Z).run(&mut cpu);
 
-        assert_eq!(
-            cpu.registers.pc(),
-            0x8003,
-            "pc should return to previous address"
-        );
+        assert_eq!(cpu.reg.pc(), 0x8003, "pc should return to previous address");
     }
 
     #[test]
     fn example_2_from_gameboy_programming_manual() {
         let mut cpu = with_ram(vec![0x00; 0xffff]);
 
-        cpu.registers.set_z_flag(false);
+        cpu.reg.set_z_flag(false);
 
-        cpu.registers.set_pc(0x5000);
-        cpu.registers.set_sp(0xfffc);
+        cpu.reg.set_pc(0x5000);
+        cpu.reg.set_sp(0xfffc);
         cpu.mmu.set_byte(0xfffc, 0x03);
         cpu.mmu.set_byte(0xfffd, 0x80);
 
         // Condition not met.
         ConditionalRet::new(Condition::Z).run(&mut cpu);
 
-        assert_eq!(cpu.registers.pc(), 0x5000, "PC unchanged");
+        assert_eq!(cpu.reg.pc(), 0x5000, "PC unchanged");
     }
 }

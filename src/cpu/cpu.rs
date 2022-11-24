@@ -4,7 +4,7 @@ use super::registers::Registers;
 use crate::memory::address_space::AddressSpace;
 
 pub struct Cpu {
-    pub registers: Registers,
+    pub reg: Registers,
     pub mmu: Box<dyn AddressSpace>,
     pub remaining_cycles: u8,
     pub ime: bool,
@@ -13,7 +13,7 @@ pub struct Cpu {
 impl Cpu {
     pub fn new<Space: AddressSpace + 'static>(mmu: Space) -> Self {
         Cpu {
-            registers: Registers::new(),
+            reg: Registers::new(),
             mmu: Box::new(mmu),
             remaining_cycles: 0,
             ime: true,
@@ -29,8 +29,8 @@ impl Cpu {
     }
 
     pub fn read_u8(&mut self) -> u8 {
-        let res = self.mmu.get_byte(self.registers.pc());
-        self.registers.incr_pc();
+        let res = self.mmu.get_byte(self.reg.pc());
+        self.reg.incr_pc();
         res
     }
 
@@ -64,11 +64,11 @@ mod test {
     #[test]
     fn execute_op_code() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x0001);
-        cpu.registers.set_c(0x0002);
+        cpu.reg.set_a(0x0001);
+        cpu.reg.set_c(0x0002);
         let op_code = 0x81; // ADD A, C
         cpu.execute(op_code);
-        assert_eq!(cpu.registers.a(), 0x0003);
+        assert_eq!(cpu.reg.a(), 0x0003);
     }
 
     #[test]

@@ -57,13 +57,13 @@ mod test {
         let mut cpu = empty();
 
         // When A = 80h
-        cpu.registers.set_a(0x80);
+        cpu.reg.set_a(0x80);
 
         // RES 7,A
         Res::new(7, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←00h
-        assert_eq!(cpu.registers.a(), 0x00);
+        assert_eq!(cpu.reg.a(), 0x00);
     }
 
     #[test]
@@ -71,12 +71,12 @@ mod test {
         let mut cpu = empty();
 
         // When L = 3Bh
-        cpu.registers.set_l(0x3B);
+        cpu.reg.set_l(0x3B);
 
         // RES 1, L
         Res::new(1, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L ← 39h
-        assert_eq!(cpu.registers.l(), 0x39);
+        assert_eq!(cpu.reg.l(), 0x39);
     }
 }

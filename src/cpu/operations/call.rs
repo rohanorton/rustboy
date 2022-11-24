@@ -26,13 +26,13 @@ impl Operation for Call {
         // The lower-order byte of a16 is placed in byte 2 of the object code, and the
         // higher-order byte is placed in byte 3.
         let a16 = cpu.read_u16();
-        let pc = cpu.registers.pc();
-        let sp = cpu.registers.sp();
+        let pc = cpu.reg.pc();
+        let sp = cpu.reg.sp();
         let [pc_low, pc_high] = pc.to_be_bytes();
         cpu.mmu.set_byte(sp - 2, pc_high);
         cpu.mmu.set_byte(sp - 1, pc_low);
-        cpu.registers.set_pc(a16);
-        cpu.registers.set_sp(sp - 2);
+        cpu.reg.set_pc(a16);
+        cpu.reg.set_sp(sp - 2);
     }
 }
 
@@ -70,19 +70,19 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Examples: When PC = 8000h and SP = FFFEh
-        cpu.registers.set_pc(0x8000);
+        cpu.reg.set_pc(0x8000);
 
         // Increment PC by 1 (We read a byte in order get op_code)
-        cpu.registers.incr_pc();
+        cpu.reg.incr_pc();
 
-        cpu.registers.set_sp(0xFFFE);
+        cpu.reg.set_sp(0xFFFE);
         cpu.mmu.set_byte(0x8001, 0x34);
         cpu.mmu.set_byte(0x8002, 0x12);
 
         Call.run(&mut cpu);
 
         // Jumps to address 1234h
-        let pc = cpu.registers.pc();
+        let pc = cpu.reg.pc();
         assert_eq!(
             pc, 0x1234,
             "PC should store new address 0x1234, but instead is set to {pc:#06x}"
@@ -101,7 +101,7 @@ mod test {
         );
         // SP ← FFFCH
         assert_eq!(
-            cpu.registers.sp(),
+            cpu.reg.sp(),
             0xFFFC,
             "SP should be set to address where return address stored"
         );

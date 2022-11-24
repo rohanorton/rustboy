@@ -8,11 +8,11 @@ pub struct Cpl;
 impl Operation for Cpl {
     fn run(&self, cpu: &mut Cpu) {
         // Takes the one’s complement of the contents of register A.
-        let a = cpu.registers.a();
-        cpu.registers.set_a(!a);
+        let a = cpu.reg.a();
+        cpu.reg.set_a(!a);
 
-        cpu.registers.set_h_flag(true);
-        cpu.registers.set_n_flag(true);
+        cpu.reg.set_h_flag(true);
+        cpu.reg.set_n_flag(true);
     }
 }
 
@@ -37,16 +37,16 @@ mod test {
     #[test]
     fn sets_sub_flag() {
         let mut cpu = empty();
-        cpu.registers.set_n_flag(true);
+        cpu.reg.set_n_flag(true);
         Cpl.run(&mut cpu);
-        assert!(cpu.registers.n_flag());
+        assert!(cpu.reg.n_flag());
     }
 
     #[test]
     fn sets_halfcarry_flag() {
         let mut cpu = empty();
         Cpl.run(&mut cpu);
-        assert!(cpu.registers.h_flag());
+        assert!(cpu.reg.h_flag());
     }
 
     #[test]
@@ -60,12 +60,12 @@ mod test {
         let mut cpu = empty();
 
         // When A = 35h,
-        cpu.registers.set_a(0x35);
+        cpu.reg.set_a(0x35);
 
         // CPL
         Cpl.run(&mut cpu);
 
         // A ← CAh
-        assert_eq!(cpu.registers.a(), 0xCA);
+        assert_eq!(cpu.reg.a(), 0xCA);
     }
 }

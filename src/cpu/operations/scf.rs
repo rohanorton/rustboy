@@ -7,9 +7,9 @@ pub struct Scf;
 
 impl Operation for Scf {
     fn run(&self, cpu: &mut Cpu) {
-        cpu.registers.set_cy_flag(true);
-        cpu.registers.set_h_flag(false);
-        cpu.registers.set_n_flag(false);
+        cpu.reg.set_cy_flag(true);
+        cpu.reg.set_h_flag(false);
+        cpu.reg.set_n_flag(false);
     }
 }
 
@@ -34,25 +34,25 @@ mod test {
     #[test]
     fn sets_carry_flag() {
         let mut cpu = empty();
-        cpu.registers.set_cy_flag(false);
+        cpu.reg.set_cy_flag(false);
         Scf.run(&mut cpu);
-        assert!(cpu.registers.cy_flag());
+        assert!(cpu.reg.cy_flag());
     }
 
     #[test]
     fn unsets_sub_flag() {
         let mut cpu = empty();
-        cpu.registers.set_n_flag(true);
+        cpu.reg.set_n_flag(true);
         Scf.run(&mut cpu);
-        assert!(!cpu.registers.n_flag());
+        assert!(!cpu.reg.n_flag());
     }
 
     #[test]
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
-        cpu.registers.set_h_flag(true);
+        cpu.reg.set_h_flag(true);
         Scf.run(&mut cpu);
-        assert!(!cpu.registers.h_flag());
+        assert!(!cpu.reg.h_flag());
     }
 
     #[test]

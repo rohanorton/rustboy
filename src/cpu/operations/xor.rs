@@ -17,15 +17,15 @@ impl Xor {
 impl Operation for Xor {
     fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
-        let new_value = cpu.registers.a() ^ value;
+        let new_value = cpu.reg.a() ^ value;
 
-        cpu.registers.set_z_flag(new_value == 0);
-        cpu.registers.set_n_flag(false);
-        cpu.registers.set_h_flag(false);
-        cpu.registers.set_cy_flag(false);
+        cpu.reg.set_z_flag(new_value == 0);
+        cpu.reg.set_n_flag(false);
+        cpu.reg.set_h_flag(false);
+        cpu.reg.set_cy_flag(false);
 
         // Set result in accumulator
-        cpu.registers.set_a(new_value);
+        cpu.reg.set_a(new_value);
     }
 }
 
@@ -51,49 +51,49 @@ mod test {
     #[test]
     fn xors_register_with_accumulator() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x09);
-        cpu.registers.set_c(0x0e);
+        cpu.reg.set_a(0x09);
+        cpu.reg.set_c(0x0e);
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert_eq!(cpu.registers.a(), 0x07);
+        assert_eq!(cpu.reg.a(), 0x07);
     }
 
     #[test]
     fn sets_zero_flag_when_result_eq_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x00);
-        cpu.registers.set_c(0x00);
+        cpu.reg.set_a(0x00);
+        cpu.reg.set_c(0x00);
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(cpu.registers.z_flag());
+        assert!(cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_zero_flag_when_result_ne_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x00);
-        cpu.registers.set_c(0x01);
+        cpu.reg.set_a(0x00);
+        cpu.reg.set_c(0x01);
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.z_flag());
+        assert!(!cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_sub_flag() {
         let mut cpu = empty();
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.n_flag());
+        assert!(!cpu.reg.n_flag());
     }
 
     #[test]
     fn unsets_carry_flag() {
         let mut cpu = empty();
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.cy_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 
     #[test]
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
         Xor::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.h_flag());
+        assert!(!cpu.reg.h_flag());
     }
 
     #[test]
@@ -107,16 +107,16 @@ mod test {
         let mut cpu = empty();
 
         // When A = FFh
-        cpu.registers.set_a(0xFF);
+        cpu.reg.set_a(0xFF);
 
         // XOR A
         Xor::new(ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←00h,Z←1
-        assert_eq!(cpu.registers.a(), 0x00);
-        assert!(cpu.registers.z_flag());
-        assert!(!cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(!cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.a(), 0x00);
+        assert!(cpu.reg.z_flag());
+        assert!(!cpu.reg.h_flag());
+        assert!(!cpu.reg.n_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 }

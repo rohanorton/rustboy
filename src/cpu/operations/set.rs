@@ -57,14 +57,14 @@ mod test {
         let mut cpu = empty();
 
         // When A = 80h
-        cpu.registers.set_a(0x80);
+        cpu.reg.set_a(0x80);
 
         // NOTE: This example seems to be wrong in the manual, giving the operation SET 3,A.
         // SET 2,A
         Set::new(2, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←0x84
-        assert_eq!(cpu.registers.a(), 0x84);
+        assert_eq!(cpu.reg.a(), 0x84);
     }
 
     #[test]
@@ -72,12 +72,12 @@ mod test {
         let mut cpu = empty();
 
         // When L = 3Bh
-        cpu.registers.set_l(0x3B);
+        cpu.reg.set_l(0x3B);
 
         // SET 7, L
         Set::new(7, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L←0xBB
-        assert_eq!(cpu.registers.l(), 0xBB);
+        assert_eq!(cpu.reg.l(), 0xBB);
     }
 }

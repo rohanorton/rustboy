@@ -7,11 +7,11 @@ pub struct Ret;
 
 impl Operation for Ret {
     fn run(&self, cpu: &mut Cpu) {
-        let sp = cpu.registers.sp();
+        let sp = cpu.reg.sp();
         let l = cpu.mmu.get_byte(sp) as u16;
         let h = cpu.mmu.get_byte(sp + 1) as u16;
-        cpu.registers.set_sp(sp + 2);
-        cpu.registers.set_pc(l | h << 8);
+        cpu.reg.set_sp(sp + 2);
+        cpu.reg.set_pc(l | h << 8);
     }
 }
 
@@ -50,12 +50,12 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Examples: When PC = 8000h and SP = FFFEh
-        cpu.registers.set_pc(0x8000);
+        cpu.reg.set_pc(0x8000);
 
         // Increment PC by 1 (We read a byte in order get op_code)
-        cpu.registers.incr_pc();
+        cpu.reg.incr_pc();
 
-        cpu.registers.set_sp(0xFFFE);
+        cpu.reg.set_sp(0xFFFE);
         cpu.mmu.set_byte(0x8001, 0x34);
         cpu.mmu.set_byte(0x8002, 0x12);
 
@@ -63,10 +63,6 @@ mod test {
 
         Ret.run(&mut cpu);
 
-        assert_eq!(
-            cpu.registers.pc(),
-            0x8003,
-            "PC should return to previous address"
-        );
+        assert_eq!(cpu.reg.pc(), 0x8003, "PC should return to previous address");
     }
 }

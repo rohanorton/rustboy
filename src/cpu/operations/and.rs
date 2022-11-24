@@ -17,15 +17,15 @@ impl And {
 impl Operation for And {
     fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
-        let new_value = cpu.registers.a() & value;
+        let new_value = cpu.reg.a() & value;
 
-        cpu.registers.set_z_flag(new_value == 0);
-        cpu.registers.set_n_flag(false);
-        cpu.registers.set_h_flag(true);
-        cpu.registers.set_cy_flag(false);
+        cpu.reg.set_z_flag(new_value == 0);
+        cpu.reg.set_n_flag(false);
+        cpu.reg.set_h_flag(true);
+        cpu.reg.set_cy_flag(false);
 
         // Set result in accumulator
-        cpu.registers.set_a(new_value);
+        cpu.reg.set_a(new_value);
     }
 }
 
@@ -51,55 +51,55 @@ mod test {
     #[test]
     fn ands_register_with_accumulator() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x11);
-        cpu.registers.set_c(0x01);
+        cpu.reg.set_a(0x11);
+        cpu.reg.set_c(0x01);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert_eq!(cpu.registers.a(), 0x01);
+        assert_eq!(cpu.reg.a(), 0x01);
     }
 
     #[test]
     fn sets_zero_flag_when_result_eq_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x00);
-        cpu.registers.set_c(0x00);
+        cpu.reg.set_a(0x00);
+        cpu.reg.set_c(0x00);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(cpu.registers.z_flag());
+        assert!(cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_zero_flag_when_result_ne_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x01);
-        cpu.registers.set_c(0x01);
+        cpu.reg.set_a(0x01);
+        cpu.reg.set_c(0x01);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.z_flag());
+        assert!(!cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_sub_flag() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x02);
-        cpu.registers.set_c(0x04);
+        cpu.reg.set_a(0x02);
+        cpu.reg.set_c(0x04);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.n_flag());
+        assert!(!cpu.reg.n_flag());
     }
 
     #[test]
     fn unsets_carry_flag() {
         let mut cpu = empty();
-        cpu.registers.set_a(0xFE);
-        cpu.registers.set_c(0x01);
+        cpu.reg.set_a(0xFE);
+        cpu.reg.set_c(0x01);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(!cpu.registers.cy_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 
     #[test]
     fn sets_halfcarry_flag() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x0F);
-        cpu.registers.set_c(0x01);
+        cpu.reg.set_a(0x0F);
+        cpu.reg.set_c(0x01);
         And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
-        assert!(cpu.registers.h_flag());
+        assert!(cpu.reg.h_flag());
     }
 
     #[test]
@@ -113,17 +113,17 @@ mod test {
         let mut cpu = empty();
 
         // When A = 5Ah, L = 3Fh
-        cpu.registers.set_a(0x5A);
-        cpu.registers.set_l(0x3F);
+        cpu.reg.set_a(0x5A);
+        cpu.reg.set_l(0x3F);
 
         // AND L
         And::new(ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // A←1Ah,Z←0,H←1,N←0 CY←0
-        assert_eq!(cpu.registers.a(), 0x1A);
-        assert!(!cpu.registers.z_flag());
-        assert!(cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(!cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.a(), 0x1A);
+        assert!(!cpu.reg.z_flag());
+        assert!(cpu.reg.h_flag());
+        assert!(!cpu.reg.n_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 }

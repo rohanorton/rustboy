@@ -44,9 +44,9 @@ mod test {
     #[test]
     fn decrements_register() {
         let mut cpu = empty();
-        cpu.registers.set_bc(0x1000);
+        cpu.reg.set_bc(0x1000);
         Dec16::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
-        assert_eq!(cpu.registers.bc(), 0x0FFF);
+        assert_eq!(cpu.reg.bc(), 0x0FFF);
     }
 
     #[test]
@@ -60,12 +60,12 @@ mod test {
         let mut cpu = empty();
 
         // When DE = 235Fh,
-        cpu.registers.set_de(0x235F);
+        cpu.reg.set_de(0x235F);
 
         // INC DE
         Dec16::new(ArithmeticTarget16Bit::DE).run(&mut cpu);
 
         // DE ← 235Eh
-        assert_eq!(cpu.registers.de(), 0x235E);
+        assert_eq!(cpu.reg.de(), 0x235E);
     }
 }

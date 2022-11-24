@@ -66,16 +66,16 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // JP NZ 8000h
-        cpu.registers.set_pc(0x0000);
+        cpu.reg.set_pc(0x0000);
         cpu.mmu.set_byte(0x0000, 0x00);
         cpu.mmu.set_byte(0x0001, 0x80);
 
-        cpu.registers.set_z_flag(true);
+        cpu.reg.set_z_flag(true);
 
         ConditionalJp::new(Condition::NZ, AddressTarget::A16).run(&mut cpu);
 
         // Increments PC by 2
-        assert_eq!(cpu.registers.pc(), 0x0002);
+        assert_eq!(cpu.reg.pc(), 0x0002);
     }
 
     #[test]
@@ -83,14 +83,14 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // JP Z 8000h
-        cpu.registers.set_pc(0x0000);
+        cpu.reg.set_pc(0x0000);
         cpu.mmu.set_byte(0x0000, 0x00);
         cpu.mmu.set_byte(0x0001, 0x80);
 
-        cpu.registers.set_z_flag(true);
+        cpu.reg.set_z_flag(true);
 
         ConditionalJp::new(Condition::Z, AddressTarget::A16).run(&mut cpu);
 
-        assert_eq!(cpu.registers.pc(), 0x8000);
+        assert_eq!(cpu.reg.pc(), 0x8000);
     }
 }

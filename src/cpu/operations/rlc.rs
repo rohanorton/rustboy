@@ -20,10 +20,10 @@ impl Operation for Rlc {
         let x = self.operand.value(cpu);
         let rot_x = x.rotate_left(1);
         self.operand.set_value(cpu, rot_x);
-        cpu.registers.set_cy_flag(x >> 7 != 0);
-        cpu.registers.set_z_flag(rot_x == 0);
-        cpu.registers.set_h_flag(false);
-        cpu.registers.set_n_flag(false);
+        cpu.reg.set_cy_flag(x >> 7 != 0);
+        cpu.reg.set_z_flag(rot_x == 0);
+        cpu.reg.set_h_flag(false);
+        cpu.reg.set_n_flag(false);
     }
 }
 
@@ -67,18 +67,18 @@ mod test {
         let mut cpu = empty();
 
         // When B = 85h and CY = 0,
-        cpu.registers.set_b(0x85);
-        cpu.registers.set_cy_flag(false);
+        cpu.reg.set_b(0x85);
+        cpu.reg.set_cy_flag(false);
 
         // RLC B
         Rlc::new(ArithmeticTarget8Bit::B).run(&mut cpu);
 
         // B←0Bh,CY←1,Z←0,H←0,N←0
-        assert_eq!(cpu.registers.b(), 0x0B);
-        assert!(cpu.registers.cy_flag(), "Carry flag should be set");
-        assert!(!cpu.registers.z_flag(), "Zero flag should not be set");
-        assert!(!cpu.registers.h_flag(), "Half-Carry flag should not be set");
-        assert!(!cpu.registers.n_flag(), "Subtract flag should not be set");
+        assert_eq!(cpu.reg.b(), 0x0B);
+        assert!(cpu.reg.cy_flag(), "Carry flag should be set");
+        assert!(!cpu.reg.z_flag(), "Zero flag should not be set");
+        assert!(!cpu.reg.h_flag(), "Half-Carry flag should not be set");
+        assert!(!cpu.reg.n_flag(), "Subtract flag should not be set");
     }
 
     #[test]
@@ -86,17 +86,17 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // When (HL) = 0, and CY = 0,
-        cpu.mmu.set_byte(cpu.registers.hl(), 0);
-        cpu.registers.set_cy_flag(false);
+        cpu.mmu.set_byte(cpu.reg.hl(), 0);
+        cpu.reg.set_cy_flag(false);
 
         // RLC (HL)
         Rlc::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         // (HL)←00h,CY←0,Z←1,H←0,N←0
-        assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x00);
-        assert!(cpu.registers.z_flag(), "Zero flag should be set");
-        assert!(!cpu.registers.cy_flag(), "Carry flag should not be set");
-        assert!(!cpu.registers.h_flag(), "Half-Carry flag should not be set");
-        assert!(!cpu.registers.n_flag(), "Subtract flag should not be set");
+        assert_eq!(cpu.mmu.get_byte(cpu.reg.hl()), 0x00);
+        assert!(cpu.reg.z_flag(), "Zero flag should be set");
+        assert!(!cpu.reg.cy_flag(), "Carry flag should not be set");
+        assert!(!cpu.reg.h_flag(), "Half-Carry flag should not be set");
+        assert!(!cpu.reg.n_flag(), "Subtract flag should not be set");
     }
 }

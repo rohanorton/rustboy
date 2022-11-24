@@ -11,10 +11,10 @@ pub enum Condition {
 impl Condition {
     pub fn check(&self, cpu: &mut Cpu) -> bool {
         match self {
-            Self::C => cpu.registers.cy_flag(),
-            Self::NC => !cpu.registers.cy_flag(),
-            Self::Z => cpu.registers.z_flag(),
-            Self::NZ => !cpu.registers.z_flag(),
+            Self::C => cpu.reg.cy_flag(),
+            Self::NC => !cpu.reg.cy_flag(),
+            Self::Z => cpu.reg.z_flag(),
+            Self::NZ => !cpu.reg.z_flag(),
         }
     }
 }

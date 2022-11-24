@@ -8,15 +8,13 @@ pub struct AddSp;
 impl Operation for AddSp {
     fn run(&self, cpu: &mut Cpu) {
         let r8 = cpu.read_u8() as i8;
-        let a = cpu.registers.sp();
+        let a = cpu.reg.sp();
         let b = r8 as u16;
-        cpu.registers.set_z_flag(false);
-        cpu.registers.set_n_flag(false);
-        cpu.registers
-            .set_cy_flag((a & 0x00ff) + (b & 0x00ff) > 0x00ff);
-        cpu.registers
-            .set_h_flag((a & 0x000f) + (b & 0x000f) > 0x000f);
-        cpu.registers.set_sp(a.wrapping_add(b));
+        cpu.reg.set_z_flag(false);
+        cpu.reg.set_n_flag(false);
+        cpu.reg.set_cy_flag((a & 0x00ff) + (b & 0x00ff) > 0x00ff);
+        cpu.reg.set_h_flag((a & 0x000f) + (b & 0x000f) > 0x000f);
+        cpu.reg.set_sp(a.wrapping_add(b));
     }
 }
 
@@ -47,10 +45,10 @@ mod test {
     #[test]
     fn adds_byte_to_sp() {
         let mut cpu = with_ram(vec![0x41]);
-        cpu.registers.set_pc(0x0000); // ensure first byte read
-        cpu.registers.set_sp(0x010F);
+        cpu.reg.set_pc(0x0000); // ensure first byte read
+        cpu.reg.set_sp(0x010F);
         AddSp.run(&mut cpu);
-        assert_eq!(cpu.registers.sp(), 0x0150);
+        assert_eq!(cpu.reg.sp(), 0x0150);
     }
 
     #[test]
@@ -58,10 +56,10 @@ mod test {
         // -2 in Two's Complement
         let neg_two = 0xFE;
         let mut cpu = with_ram(vec![neg_two]);
-        cpu.registers.set_pc(0x0000); // ensure first byte read
-        cpu.registers.set_sp(0x010F);
+        cpu.reg.set_pc(0x0000); // ensure first byte read
+        cpu.reg.set_sp(0x010F);
         AddSp.run(&mut cpu);
-        assert_eq!(cpu.registers.sp(), 0x010D);
+        assert_eq!(cpu.reg.sp(), 0x010D);
     }
 
     #[test]
@@ -74,19 +72,19 @@ mod test {
     fn example_from_gameboy_programming_manual() {
         // r8 = 2
         let mut cpu = with_ram(vec![0x02]);
-        cpu.registers.set_pc(0x0000); // ensure first byte read
+        cpu.reg.set_pc(0x0000); // ensure first byte read
 
         // SP = FFF8h
-        cpu.registers.set_sp(0xFFF8);
+        cpu.reg.set_sp(0xFFF8);
 
         // ADDSP,2
         AddSp.run(&mut cpu);
 
         // SP←0xFFFA,CY←0,H←0,N←0,Z←0
-        assert_eq!(cpu.registers.sp(), 0xFFFA);
-        assert!(!cpu.registers.z_flag());
-        assert!(!cpu.registers.h_flag());
-        assert!(!cpu.registers.n_flag());
-        assert!(!cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.sp(), 0xFFFA);
+        assert!(!cpu.reg.z_flag());
+        assert!(!cpu.reg.h_flag());
+        assert!(!cpu.reg.n_flag());
+        assert!(!cpu.reg.cy_flag());
     }
 }

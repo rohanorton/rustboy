@@ -17,7 +17,7 @@ impl Jp {
 impl Operation for Jp {
     fn run(&self, cpu: &mut Cpu) {
         let addr = self.operand.value(cpu);
-        cpu.registers.set_pc(addr);
+        cpu.reg.set_pc(addr);
     }
 }
 
@@ -56,13 +56,13 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // JP 8000h
-        cpu.registers.set_pc(0x0000);
+        cpu.reg.set_pc(0x0000);
         cpu.mmu.set_byte(0x0000, 0x00);
         cpu.mmu.set_byte(0x0001, 0x80);
 
         Jp::new(AddressTarget::A16).run(&mut cpu);
 
         // Jump to 8000h.
-        assert_eq!(cpu.registers.pc(), 0x8000);
+        assert_eq!(cpu.reg.pc(), 0x8000);
     }
 }

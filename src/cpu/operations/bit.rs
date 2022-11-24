@@ -20,9 +20,9 @@ impl Operation for Bit {
     fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let bit = x >> self.number & 1 == 0;
-        cpu.registers.set_z_flag(bit);
-        cpu.registers.set_h_flag(true);
-        cpu.registers.set_n_flag(false);
+        cpu.reg.set_z_flag(bit);
+        cpu.reg.set_h_flag(true);
+        cpu.reg.set_n_flag(false);
     }
 }
 
@@ -56,15 +56,15 @@ mod test {
         let mut cpu = empty();
 
         // When A = 80h
-        cpu.registers.set_a(0x80);
+        cpu.reg.set_a(0x80);
 
         // BIT 7, A
         Bit::new(7, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // Z←0,H←1,N←0
-        assert!(!cpu.registers.z_flag(), "Zero flag should not be set");
-        assert!(cpu.registers.h_flag(), "Half-Carry flag should be set");
-        assert!(!cpu.registers.n_flag(), "Subtract flag should not be set");
+        assert!(!cpu.reg.z_flag(), "Zero flag should not be set");
+        assert!(cpu.reg.h_flag(), "Half-Carry flag should be set");
+        assert!(!cpu.reg.n_flag(), "Subtract flag should not be set");
     }
 
     #[test]
@@ -72,14 +72,14 @@ mod test {
         let mut cpu = empty();
 
         // When L = EFh
-        cpu.registers.set_l(0xEF);
+        cpu.reg.set_l(0xEF);
 
         // BIT 4, L
         Bit::new(4, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // Z←1,H←1,N←0
-        assert!(cpu.registers.z_flag(), "Zero flag should be set");
-        assert!(cpu.registers.h_flag(), "Half-Carry flag should be set");
-        assert!(!cpu.registers.n_flag(), "Subtract flag should not be set");
+        assert!(cpu.reg.z_flag(), "Zero flag should be set");
+        assert!(cpu.reg.h_flag(), "Half-Carry flag should be set");
+        assert!(!cpu.reg.n_flag(), "Subtract flag should not be set");
     }
 }

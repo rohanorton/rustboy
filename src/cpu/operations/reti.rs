@@ -47,24 +47,20 @@ mod test {
     fn returns_to_address_stored() {
         let mut cpu = with_ram(vec![0x00; 0xffff]);
 
-        cpu.registers.set_pc(0x5000);
-        cpu.registers.set_sp(0xfffc);
+        cpu.reg.set_pc(0x5000);
+        cpu.reg.set_sp(0xfffc);
         cpu.mmu.set_byte(0xfffc, 0x03);
         cpu.mmu.set_byte(0xfffd, 0x80);
 
         Reti.run(&mut cpu);
 
-        assert_eq!(
-            cpu.registers.pc(),
-            0x8003,
-            "pc should return to previous address"
-        );
+        assert_eq!(cpu.reg.pc(), 0x8003, "pc should return to previous address");
     }
 
     #[test]
     fn sets_interrupt_master_enabled_flag() {
         let mut cpu = with_ram(vec![0x00; 0xffff]);
-        cpu.registers.set_sp(0xfffc);
+        cpu.reg.set_sp(0xfffc);
         cpu.ime = false;
         Reti.run(&mut cpu);
         assert!(cpu.ime, "IME should be set");

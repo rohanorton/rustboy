@@ -11,10 +11,10 @@ pub struct Daa;
 
 impl Operation for Daa {
     fn run(&self, cpu: &mut Cpu) {
-        let a = cpu.registers.a();
-        let is_addition = !cpu.registers.n_flag();
-        let has_half_carried = cpu.registers.h_flag();
-        let has_carried = cpu.registers.cy_flag();
+        let a = cpu.reg.a();
+        let is_addition = !cpu.reg.n_flag();
+        let has_half_carried = cpu.reg.h_flag();
+        let has_carried = cpu.reg.cy_flag();
 
         let mut adjustment = 0;
         if has_half_carried {
@@ -36,10 +36,10 @@ impl Operation for Daa {
             a.wrapping_sub(adjustment)
         };
 
-        cpu.registers.set_a(bcd_a);
-        cpu.registers.set_cy_flag(adjustment >= 0x60);
-        cpu.registers.set_z_flag(bcd_a == 0);
-        cpu.registers.set_h_flag(false);
+        cpu.reg.set_a(bcd_a);
+        cpu.reg.set_cy_flag(adjustment >= 0x60);
+        cpu.reg.set_z_flag(bcd_a == 0);
+        cpu.reg.set_h_flag(false);
     }
 }
 
@@ -67,36 +67,36 @@ mod test {
     #[test]
     fn sets_zero_flag_if_a_reg_eq_0_at_start() {
         let mut cpu = empty();
-        cpu.registers.set_f(0);
-        cpu.registers.set_a(0);
+        cpu.reg.set_f(0);
+        cpu.reg.set_a(0);
         Daa.run(&mut cpu);
-        assert!(cpu.registers.z_flag());
+        assert!(cpu.reg.z_flag());
     }
 
     #[test]
     fn sets_zero_flag_if_a_reg_eq_0_at_when_converted() {
         let mut cpu = empty();
-        cpu.registers.set_f(0);
-        cpu.registers.set_a(0x9A);
+        cpu.reg.set_f(0);
+        cpu.reg.set_a(0x9A);
         Daa.run(&mut cpu);
-        assert_eq!(cpu.registers.a(), 0);
-        assert!(cpu.registers.z_flag());
+        assert_eq!(cpu.reg.a(), 0);
+        assert!(cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_zero_flag_if_ne_0() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x04);
+        cpu.reg.set_a(0x04);
         Daa.run(&mut cpu);
-        assert!(!cpu.registers.z_flag());
+        assert!(!cpu.reg.z_flag());
     }
 
     #[test]
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
-        cpu.registers.set_h_flag(true);
+        cpu.reg.set_h_flag(true);
         Daa.run(&mut cpu);
-        assert!(!cpu.registers.h_flag());
+        assert!(!cpu.reg.h_flag());
     }
 
     #[test]
@@ -110,28 +110,28 @@ mod test {
         let mut cpu = empty();
 
         // When A = 45h and B = 38h
-        cpu.registers.set_a(0x45);
-        cpu.registers.set_b(0x38);
+        cpu.reg.set_a(0x45);
+        cpu.reg.set_b(0x38);
 
         // ADD A,B
         Add::new(ArithmeticTarget8Bit::B).run(&mut cpu);
         // A←7Dh,N←0
-        assert_eq!(cpu.registers.a(), 0x7D);
+        assert_eq!(cpu.reg.a(), 0x7D);
 
         // DAA
         Daa.run(&mut cpu);
         // A←7Dh+06h(83h),CY←0
-        assert_eq!(cpu.registers.a(), 0x83);
-        assert!(!cpu.registers.cy_flag());
+        assert_eq!(cpu.reg.a(), 0x83);
+        assert!(!cpu.reg.cy_flag());
 
         // SUB A,B
         Sub::new(ArithmeticTarget8Bit::B).run(&mut cpu);
         // A←83h–38h(4Bh),N←1
-        assert_eq!(cpu.registers.a(), 0x4B);
+        assert_eq!(cpu.reg.a(), 0x4B);
 
         // DAA
         Daa.run(&mut cpu);
         // A←4Bh+FAh(45h)
-        assert_eq!(cpu.registers.a(), 0x45);
+        assert_eq!(cpu.reg.a(), 0x45);
     }
 }

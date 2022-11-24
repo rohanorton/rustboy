@@ -16,10 +16,10 @@ impl Pop {
 
 impl Operation for Pop {
     fn run(&self, cpu: &mut Cpu) {
-        let qq_l = cpu.mmu.get_byte(cpu.registers.sp()) as u16;
-        cpu.registers.incr_sp();
-        let qq_h = cpu.mmu.get_byte(cpu.registers.sp()) as u16;
-        cpu.registers.incr_sp();
+        let qq_l = cpu.mmu.get_byte(cpu.reg.sp()) as u16;
+        cpu.reg.incr_sp();
+        let qq_h = cpu.mmu.get_byte(cpu.reg.sp()) as u16;
+        cpu.reg.incr_sp();
         let val = (qq_h << 8) + qq_l;
         self.src.set_value(cpu, val);
     }
@@ -60,10 +60,10 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Setting BC to null to make clearer
-        cpu.registers.set_bc(0x0000);
+        cpu.reg.set_bc(0x0000);
 
         // When SP = FFFCh, (FFFCh) = 5Fh, and (FFFDh) = 3Ch
-        cpu.registers.set_sp(0xFFFC);
+        cpu.reg.set_sp(0xFFFC);
         cpu.mmu.set_byte(0xFFFC, 0x5F);
         cpu.mmu.set_byte(0xFFFD, 0x3C);
 
@@ -71,8 +71,8 @@ mod test {
         Pop::new(PushPopTarget::BC).run(&mut cpu);
 
         // B ← 3Ch, C ← 5Fh, SP ← FFFEh
-        assert_eq!(cpu.registers.b(), 0x3C);
-        assert_eq!(cpu.registers.c(), 0x5F);
-        assert_eq!(cpu.registers.sp(), 0xFFFE);
+        assert_eq!(cpu.reg.b(), 0x3C);
+        assert_eq!(cpu.reg.c(), 0x5F);
+        assert_eq!(cpu.reg.sp(), 0xFFFE);
     }
 }

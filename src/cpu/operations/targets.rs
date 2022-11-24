@@ -16,27 +16,27 @@ pub enum ArithmeticTarget8Bit {
 impl ArithmeticTarget8Bit {
     pub fn value(&self, cpu: &mut Cpu) -> u8 {
         match self {
-            Self::A => cpu.registers.a(),
-            Self::B => cpu.registers.b(),
-            Self::C => cpu.registers.c(),
-            Self::D => cpu.registers.d(),
-            Self::E => cpu.registers.e(),
-            Self::H => cpu.registers.h(),
-            Self::L => cpu.registers.l(),
-            Self::HLAddr => cpu.mmu.get_byte(cpu.registers.hl()),
+            Self::A => cpu.reg.a(),
+            Self::B => cpu.reg.b(),
+            Self::C => cpu.reg.c(),
+            Self::D => cpu.reg.d(),
+            Self::E => cpu.reg.e(),
+            Self::H => cpu.reg.h(),
+            Self::L => cpu.reg.l(),
+            Self::HLAddr => cpu.mmu.get_byte(cpu.reg.hl()),
             Self::D8 => cpu.read_u8(),
         }
     }
     pub fn set_value(&self, cpu: &mut Cpu, val: u8) {
         match self {
-            Self::A => cpu.registers.set_a(val),
-            Self::B => cpu.registers.set_b(val),
-            Self::C => cpu.registers.set_c(val),
-            Self::D => cpu.registers.set_d(val),
-            Self::E => cpu.registers.set_e(val),
-            Self::H => cpu.registers.set_h(val),
-            Self::L => cpu.registers.set_l(val),
-            Self::HLAddr => cpu.mmu.set_byte(cpu.registers.hl(), val),
+            Self::A => cpu.reg.set_a(val),
+            Self::B => cpu.reg.set_b(val),
+            Self::C => cpu.reg.set_c(val),
+            Self::D => cpu.reg.set_d(val),
+            Self::E => cpu.reg.set_e(val),
+            Self::H => cpu.reg.set_h(val),
+            Self::L => cpu.reg.set_l(val),
+            Self::HLAddr => cpu.mmu.set_byte(cpu.reg.hl(), val),
             Self::D8 => panic!("Illegal Operation. Cannot set value."),
         };
     }
@@ -72,18 +72,18 @@ pub enum ArithmeticTarget16Bit {
 impl ArithmeticTarget16Bit {
     pub fn value(&self, cpu: &mut Cpu) -> u16 {
         match self {
-            Self::BC => cpu.registers.bc(),
-            Self::DE => cpu.registers.de(),
-            Self::HL => cpu.registers.hl(),
-            Self::SP => cpu.registers.sp(),
+            Self::BC => cpu.reg.bc(),
+            Self::DE => cpu.reg.de(),
+            Self::HL => cpu.reg.hl(),
+            Self::SP => cpu.reg.sp(),
         }
     }
     pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
         match self {
-            Self::BC => cpu.registers.set_bc(val),
-            Self::DE => cpu.registers.set_de(val),
-            Self::HL => cpu.registers.set_hl(val),
-            Self::SP => cpu.registers.set_sp(val),
+            Self::BC => cpu.reg.set_bc(val),
+            Self::DE => cpu.reg.set_de(val),
+            Self::HL => cpu.reg.set_hl(val),
+            Self::SP => cpu.reg.set_sp(val),
         };
     }
 }
@@ -125,24 +125,24 @@ pub enum LdTarget {
 impl LdTarget {
     pub fn value(&self, cpu: &mut Cpu) -> u8 {
         match self {
-            Self::A => cpu.registers.a(),
-            Self::B => cpu.registers.b(),
-            Self::C => cpu.registers.c(),
-            Self::D => cpu.registers.d(),
-            Self::E => cpu.registers.e(),
-            Self::H => cpu.registers.h(),
-            Self::L => cpu.registers.l(),
-            Self::BCAddr => cpu.mmu.get_byte(cpu.registers.bc()),
-            Self::DEAddr => cpu.mmu.get_byte(cpu.registers.de()),
-            Self::HLAddr => cpu.mmu.get_byte(cpu.registers.hl()),
+            Self::A => cpu.reg.a(),
+            Self::B => cpu.reg.b(),
+            Self::C => cpu.reg.c(),
+            Self::D => cpu.reg.d(),
+            Self::E => cpu.reg.e(),
+            Self::H => cpu.reg.h(),
+            Self::L => cpu.reg.l(),
+            Self::BCAddr => cpu.mmu.get_byte(cpu.reg.bc()),
+            Self::DEAddr => cpu.mmu.get_byte(cpu.reg.de()),
+            Self::HLAddr => cpu.mmu.get_byte(cpu.reg.hl()),
             Self::HLIAddr => {
-                let hl = cpu.registers.hl();
-                cpu.registers.incr_hl();
+                let hl = cpu.reg.hl();
+                cpu.reg.incr_hl();
                 cpu.mmu.get_byte(hl)
             }
             Self::HLDAddr => {
-                let hl = cpu.registers.hl();
-                cpu.registers.decr_hl();
+                let hl = cpu.reg.hl();
+                cpu.reg.decr_hl();
                 cpu.mmu.get_byte(hl)
             }
             Self::D8 => cpu.read_u8(),
@@ -151,7 +151,7 @@ impl LdTarget {
                 cpu.mmu.get_byte(addr)
             }
             Self::CAddr => {
-                let c = cpu.registers.c() as u16;
+                let c = cpu.reg.c() as u16;
                 cpu.mmu.get_byte(c + 0xFF00)
             }
             Self::A8 => {
@@ -163,24 +163,24 @@ impl LdTarget {
 
     pub fn set_value(&self, cpu: &mut Cpu, val: u8) {
         match self {
-            Self::A => cpu.registers.set_a(val),
-            Self::B => cpu.registers.set_b(val),
-            Self::C => cpu.registers.set_c(val),
-            Self::D => cpu.registers.set_d(val),
-            Self::E => cpu.registers.set_e(val),
-            Self::H => cpu.registers.set_h(val),
-            Self::L => cpu.registers.set_l(val),
-            Self::BCAddr => cpu.mmu.set_byte(cpu.registers.bc(), val),
-            Self::DEAddr => cpu.mmu.set_byte(cpu.registers.de(), val),
-            Self::HLAddr => cpu.mmu.set_byte(cpu.registers.hl(), val),
+            Self::A => cpu.reg.set_a(val),
+            Self::B => cpu.reg.set_b(val),
+            Self::C => cpu.reg.set_c(val),
+            Self::D => cpu.reg.set_d(val),
+            Self::E => cpu.reg.set_e(val),
+            Self::H => cpu.reg.set_h(val),
+            Self::L => cpu.reg.set_l(val),
+            Self::BCAddr => cpu.mmu.set_byte(cpu.reg.bc(), val),
+            Self::DEAddr => cpu.mmu.set_byte(cpu.reg.de(), val),
+            Self::HLAddr => cpu.mmu.set_byte(cpu.reg.hl(), val),
             Self::HLIAddr => {
-                let hl = cpu.registers.hl();
-                cpu.registers.incr_hl();
+                let hl = cpu.reg.hl();
+                cpu.reg.incr_hl();
                 cpu.mmu.set_byte(hl, val);
             }
             Self::HLDAddr => {
-                let hl = cpu.registers.hl();
-                cpu.registers.decr_hl();
+                let hl = cpu.reg.hl();
+                cpu.reg.decr_hl();
                 cpu.mmu.set_byte(hl, val);
             }
             Self::D8 => panic!("Illegal Operation. Cannot set value."),
@@ -189,7 +189,7 @@ impl LdTarget {
                 cpu.mmu.set_byte(addr, val);
             }
             Self::CAddr => {
-                let c = cpu.registers.c() as u16;
+                let c = cpu.reg.c() as u16;
                 cpu.mmu.set_byte(c + 0xFF00, val);
             }
             Self::A8 => {
@@ -239,10 +239,10 @@ pub enum Ld16Target {
 impl Ld16Target {
     pub fn value(&self, cpu: &mut Cpu) -> u16 {
         match self {
-            Self::BC => cpu.registers.bc(),
-            Self::DE => cpu.registers.de(),
-            Self::HL => cpu.registers.hl(),
-            Self::SP => cpu.registers.sp(),
+            Self::BC => cpu.reg.bc(),
+            Self::DE => cpu.reg.de(),
+            Self::HL => cpu.reg.hl(),
+            Self::SP => cpu.reg.sp(),
             Self::D16 => cpu.read_u16(),
             Self::A16 => panic!("Cannot read u16 from address"),
         }
@@ -250,10 +250,10 @@ impl Ld16Target {
 
     pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
         match self {
-            Self::BC => cpu.registers.set_bc(val),
-            Self::DE => cpu.registers.set_de(val),
-            Self::HL => cpu.registers.set_hl(val),
-            Self::SP => cpu.registers.set_sp(val),
+            Self::BC => cpu.reg.set_bc(val),
+            Self::DE => cpu.reg.set_de(val),
+            Self::HL => cpu.reg.set_hl(val),
+            Self::SP => cpu.reg.set_sp(val),
             Self::D16 => panic!("Cannot write to address"),
             Self::A16 => {
                 // Stores the lower byte at address nn specified by the 16-bit
@@ -295,18 +295,18 @@ pub enum PushPopTarget {
 impl PushPopTarget {
     pub fn value(&self, cpu: &mut Cpu) -> u16 {
         match self {
-            Self::BC => cpu.registers.bc(),
-            Self::DE => cpu.registers.de(),
-            Self::HL => cpu.registers.hl(),
-            Self::AF => cpu.registers.af(),
+            Self::BC => cpu.reg.bc(),
+            Self::DE => cpu.reg.de(),
+            Self::HL => cpu.reg.hl(),
+            Self::AF => cpu.reg.af(),
         }
     }
     pub fn set_value(&self, cpu: &mut Cpu, val: u16) {
         match self {
-            Self::BC => cpu.registers.set_bc(val),
-            Self::DE => cpu.registers.set_de(val),
-            Self::HL => cpu.registers.set_hl(val),
-            Self::AF => cpu.registers.set_af(val),
+            Self::BC => cpu.reg.set_bc(val),
+            Self::DE => cpu.reg.set_de(val),
+            Self::HL => cpu.reg.set_hl(val),
+            Self::AF => cpu.reg.set_af(val),
         }
     }
 }
@@ -336,7 +336,7 @@ impl AddressTarget {
     pub fn value(&self, cpu: &mut Cpu) -> u16 {
         match self {
             Self::A16 => cpu.read_u16(),
-            Self::HLAddr => cpu.registers.hl(),
+            Self::HLAddr => cpu.reg.hl(),
         }
     }
 }

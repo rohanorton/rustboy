@@ -54,46 +54,46 @@ mod test {
     #[test]
     fn loads_value_from_one_register_into_another() {
         let mut cpu = empty();
-        cpu.registers.set_a(0x00);
-        cpu.registers.set_b(0x23);
+        cpu.reg.set_a(0x00);
+        cpu.reg.set_b(0x23);
         Ld::new(LdTarget::A, LdTarget::B).run(&mut cpu);
-        assert_eq!(cpu.registers.a(), 0x23);
+        assert_eq!(cpu.reg.a(), 0x23);
     }
 
     #[test]
     fn loads_value_from_ram_into_register() {
         let mut cpu = with_ram(vec![0x19]);
-        cpu.registers.set_hl(0x00);
-        cpu.registers.set_a(0x00);
+        cpu.reg.set_hl(0x00);
+        cpu.reg.set_a(0x00);
         Ld::new(LdTarget::A, LdTarget::HLAddr).run(&mut cpu);
-        assert_eq!(cpu.registers.a(), 0x19);
+        assert_eq!(cpu.reg.a(), 0x19);
     }
 
     #[test]
     fn loads_value_from_register_into_ram() {
         let mut cpu = with_ram(vec![0x00]);
-        cpu.registers.set_hl(0x00);
-        cpu.registers.set_a(0x29);
+        cpu.reg.set_hl(0x00);
+        cpu.reg.set_a(0x29);
         Ld::new(LdTarget::HLAddr, LdTarget::A).run(&mut cpu);
-        assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x29);
+        assert_eq!(cpu.mmu.get_byte(cpu.reg.hl()), 0x29);
     }
 
     #[test]
     fn loads_value_from_register_into_ram_incrementing_pointer_for_hli_target() {
         let mut cpu = empty();
-        cpu.registers.set_hl(0x00);
-        cpu.registers.set_a(0x29);
+        cpu.reg.set_hl(0x00);
+        cpu.reg.set_a(0x29);
         Ld::new(LdTarget::HLIAddr, LdTarget::A).run(&mut cpu);
-        assert_eq!(cpu.registers.hl(), 0x01);
+        assert_eq!(cpu.reg.hl(), 0x01);
     }
 
     #[test]
     fn loads_value_from_register_into_ram_decrementing_pointer_for_hld_target() {
         let mut cpu = empty();
-        cpu.registers.set_hl(0x25);
-        cpu.registers.set_a(0x29);
+        cpu.reg.set_hl(0x25);
+        cpu.reg.set_a(0x29);
         Ld::new(LdTarget::HLDAddr, LdTarget::A).run(&mut cpu);
-        assert_eq!(cpu.registers.hl(), 0x24);
+        assert_eq!(cpu.reg.hl(), 0x24);
     }
 
     #[test]

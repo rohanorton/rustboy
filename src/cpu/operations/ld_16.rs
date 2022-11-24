@@ -54,10 +54,10 @@ mod test {
     #[test]
     fn loads_value_from_one_register_into_another() {
         let mut cpu = empty();
-        cpu.registers.set_bc(0x0000);
-        cpu.registers.set_hl(0x1234);
+        cpu.reg.set_bc(0x0000);
+        cpu.reg.set_hl(0x1234);
         Ld16::new(Ld16Target::BC, Ld16Target::HL).run(&mut cpu);
-        assert_eq!(cpu.registers.hl(), 0x1234);
+        assert_eq!(cpu.reg.hl(), 0x1234);
     }
 
     #[test]
@@ -72,12 +72,12 @@ mod test {
         // immediate operand nn and the upper byte of SP at address nn + 1.
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
-        cpu.registers.set_pc(0x0000);
+        cpu.reg.set_pc(0x0000);
         cpu.mmu.set_byte(0x0000, 0x00);
         cpu.mmu.set_byte(0x0001, 0xC1);
 
         // When SP = FFF8h,
-        cpu.registers.set_sp(0xFFF8);
+        cpu.reg.set_sp(0xFFF8);
 
         // LD (C100h),SP
         Ld16::new(Ld16Target::A16, Ld16Target::SP).run(&mut cpu);

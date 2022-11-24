@@ -63,21 +63,21 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Examples: When PC = 7FFCh
-        cpu.registers.set_pc(0x7FFC);
+        cpu.reg.set_pc(0x7FFC);
 
         // Increment PC by 1 (We read a byte in order get op_code)
-        cpu.registers.incr_pc();
+        cpu.reg.incr_pc();
 
-        cpu.registers.set_sp(0xFFFE);
+        cpu.reg.set_sp(0xFFFE);
         cpu.mmu.set_byte(0x7FFD, 0x34);
         cpu.mmu.set_byte(0x7FFE, 0x12);
 
-        cpu.registers.set_z_flag(true);
+        cpu.reg.set_z_flag(true);
 
         ConditionalCall::new(Condition::NZ).run(&mut cpu);
 
         assert_eq!(
-            cpu.registers.pc(),
+            cpu.reg.pc(),
             0x7FFF,
             "PC should be incremented to next operation"
         );
@@ -88,21 +88,21 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Examples: When PC = 8000h and SP = FFFEh
-        cpu.registers.set_pc(0x8000);
+        cpu.reg.set_pc(0x8000);
 
         // Increment PC by 1 (We read a byte in order get op_code)
-        cpu.registers.incr_pc();
+        cpu.reg.incr_pc();
 
-        cpu.registers.set_sp(0xFFFE);
+        cpu.reg.set_sp(0xFFFE);
         cpu.mmu.set_byte(0x8001, 0x34);
         cpu.mmu.set_byte(0x8002, 0x12);
 
-        cpu.registers.set_z_flag(true);
+        cpu.reg.set_z_flag(true);
 
         ConditionalCall::new(Condition::Z).run(&mut cpu);
 
         // Jumps to address 1234h
-        let pc = cpu.registers.pc();
+        let pc = cpu.reg.pc();
         assert_eq!(
             pc, 0x1234,
             "PC should store new address 0x1234, but instead is set to {pc:#06x}"
@@ -121,7 +121,7 @@ mod test {
         );
         // SP ← FFFCH
         assert_eq!(
-            cpu.registers.sp(),
+            cpu.reg.sp(),
             0xFFFC,
             "SP should be set to address where return address stored"
         );

@@ -20,10 +20,10 @@ impl Operation for Push {
         let qq_h = (qq & 0x00FF) as u8;
         let qq_l = (qq >> 8) as u8;
 
-        cpu.registers.decr_sp();
-        cpu.mmu.set_byte(cpu.registers.sp(), qq_h);
-        cpu.registers.decr_sp();
-        cpu.mmu.set_byte(cpu.registers.sp(), qq_l);
+        cpu.reg.decr_sp();
+        cpu.mmu.set_byte(cpu.reg.sp(), qq_h);
+        cpu.reg.decr_sp();
+        cpu.mmu.set_byte(cpu.reg.sp(), qq_l);
     }
 }
 
@@ -62,17 +62,17 @@ mod test {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
         // Example doesn't give BC values, so just setting arbitrarily
-        cpu.registers.set_bc(0x239F);
+        cpu.reg.set_bc(0x239F);
 
         // When SP = FFFEh
-        cpu.registers.set_sp(0xFFFE);
+        cpu.reg.set_sp(0xFFFE);
 
         // PUSH BC
         Push::new(PushPopTarget::BC).run(&mut cpu);
 
         // (FFFDh) ← B, (FFFCh) ← B, SP ← FFFCh
-        assert_eq!(cpu.mmu.get_byte(0xFFFD), cpu.registers.c());
-        assert_eq!(cpu.mmu.get_byte(0xFFFC), cpu.registers.b());
-        assert_eq!(cpu.registers.sp(), 0xFFFC);
+        assert_eq!(cpu.mmu.get_byte(0xFFFD), cpu.reg.c());
+        assert_eq!(cpu.mmu.get_byte(0xFFFC), cpu.reg.b());
+        assert_eq!(cpu.reg.sp(), 0xFFFC);
     }
 }
