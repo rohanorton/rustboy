@@ -52,6 +52,7 @@ pub mod set;
 pub mod sla;
 pub mod sra;
 pub mod srl;
+pub mod stop;
 pub mod sub;
 pub mod swap;
 pub mod targets;

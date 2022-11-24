@@ -44,6 +44,7 @@ use super::rrca::Rrca;
 use super::rst::Rst;
 use super::sbc::Sbc;
 use super::scf::Scf;
+use super::stop::Stop;
 use super::sub::Sub;
 use super::xor::Xor;
 
@@ -76,6 +77,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x0E => Ld::new(LdTarget::C, LdTarget::D8), 8;
         0x0F => Rrca, 4;
 
+        0x10 => Stop, 4;
         0x11 => Ld16::new(Ld16Target::DE, Ld16Target::D16), 12;
         0x12 => Ld::new(LdTarget::DEAddr, LdTarget::A), 8;
         0x13 => Inc16::new(ArithmeticTarget16Bit::DE), 8;
