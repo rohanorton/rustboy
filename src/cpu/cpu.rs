@@ -7,6 +7,7 @@ pub struct Cpu {
     pub registers: Registers,
     pub mmu: Box<dyn AddressSpace>,
     pub remaining_cycles: u8,
+    pub ime: bool,
 }
 
 impl Cpu {
@@ -15,6 +16,7 @@ impl Cpu {
             registers: Registers::new(),
             mmu: Box::new(mmu),
             remaining_cycles: 0,
+            ime: true,
         }
     }
 
