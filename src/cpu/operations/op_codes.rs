@@ -9,6 +9,7 @@ use super::add::Add;
 use super::add_hl::AddHl;
 use super::add_sp::AddSp;
 use super::and::And;
+use super::call::Call;
 use super::ccf::Ccf;
 use super::cp::Cp;
 use super::cpl::Cpl;
@@ -266,6 +267,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xCA => ConditionalJp::new(Condition::Z, AddressTarget::A16), 16;
         0xCB => PrefixCB, 4;
 
+        0xCD => Call, 24;
         0xCE => Adc::new(ArithmeticTarget8Bit::D8), 8;
 
         0xD1 => Pop::new(PushPopTarget::DE), 12;
