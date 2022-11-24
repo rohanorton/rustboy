@@ -34,6 +34,7 @@ use super::prefix_cb::PrefixCB;
 use super::push::Push;
 use super::ret::Ret;
 use super::ret_cond::ConditionalRet;
+use super::reti::Reti;
 use super::rla::Rla;
 use super::rlca::Rlca;
 use super::rra::Rra;
@@ -287,7 +288,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xD6 => Sub::new(ArithmeticTarget8Bit::D8), 8;
 
         0xD8 => ConditionalRet::new(Condition::C), 20;
-
+        0xD9 => Reti, 16;
         0xDA => ConditionalJp::new(Condition::C, AddressTarget::A16), 16;
 
         0xDC => ConditionalCall::new(Condition::C), 24;
