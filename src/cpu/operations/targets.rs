@@ -326,6 +326,7 @@ impl fmt::Display for PushPopTarget {
     }
 }
 
+#[derive(Clone, Copy)]
 pub enum AddressTarget {
     A16,
     HLAddr,
