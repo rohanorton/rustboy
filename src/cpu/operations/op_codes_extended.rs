@@ -6,6 +6,7 @@ use super::rlc::Rlc;
 use super::rr::Rr;
 use super::rrc::Rrc;
 use super::sla::Sla;
+use super::sra::Sra;
 
 // Macro to simplify op-code match creation. Wraps result in Box, to prevent type error.
 macro_rules! boxed_operation {(
@@ -61,5 +62,13 @@ pub fn lookup_extended_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x25 => Sla::new(ArithmeticTarget8Bit::L), 8;
         0x26 => Sla::new(ArithmeticTarget8Bit::HLAddr), 16;
         0x27 => Sla::new(ArithmeticTarget8Bit::A), 8;
+        0x28 => Sra::new(ArithmeticTarget8Bit::B), 8;
+        0x29 => Sra::new(ArithmeticTarget8Bit::C), 8;
+        0x2A => Sra::new(ArithmeticTarget8Bit::D), 8;
+        0x2B => Sra::new(ArithmeticTarget8Bit::E), 8;
+        0x2C => Sra::new(ArithmeticTarget8Bit::H), 8;
+        0x2D => Sra::new(ArithmeticTarget8Bit::L), 8;
+        0x2E => Sra::new(ArithmeticTarget8Bit::HLAddr), 16;
+        0x2F => Sra::new(ArithmeticTarget8Bit::A), 8;
     })
 }
