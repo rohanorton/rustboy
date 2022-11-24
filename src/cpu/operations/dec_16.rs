@@ -15,7 +15,7 @@ impl Dec16 {
 }
 
 impl Operation for Dec16 {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let new_value = value.wrapping_sub(1);
         self.target.set_value(cpu, new_value);
@@ -45,7 +45,7 @@ mod test {
     fn decrements_register() {
         let mut cpu = empty();
         cpu.registers.set_bc(0x1000);
-        Dec16::new(ArithmeticTarget16Bit::BC).execute(&mut cpu);
+        Dec16::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
         assert_eq!(cpu.registers.bc(), 0x0FFF);
     }
 
@@ -63,7 +63,7 @@ mod test {
         cpu.registers.set_de(0x235F);
 
         // INC DE
-        Dec16::new(ArithmeticTarget16Bit::DE).execute(&mut cpu);
+        Dec16::new(ArithmeticTarget16Bit::DE).run(&mut cpu);
 
         // DE ← 235Eh
         assert_eq!(cpu.registers.de(), 0x235E);

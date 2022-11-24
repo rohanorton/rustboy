@@ -17,7 +17,7 @@ impl Bit {
 }
 
 impl Operation for Bit {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let bit = x >> self.number & 1 == 0;
         cpu.registers.set_z_flag(bit);
@@ -59,7 +59,7 @@ mod test {
         cpu.registers.set_a(0x80);
 
         // BIT 7, A
-        Bit::new(7, ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Bit::new(7, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // Z←0,H←1,N←0
         assert!(!cpu.registers.z_flag(), "Zero flag should not be set");
@@ -75,7 +75,7 @@ mod test {
         cpu.registers.set_l(0xEF);
 
         // BIT 4, L
-        Bit::new(4, ArithmeticTarget8Bit::L).execute(&mut cpu);
+        Bit::new(4, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // Z←1,H←1,N←0
         assert!(cpu.registers.z_flag(), "Zero flag should be set");

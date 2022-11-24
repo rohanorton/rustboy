@@ -6,7 +6,7 @@ use super::operation::Operation;
 pub struct PrefixCB;
 
 impl Operation for PrefixCB {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let op_code = cpu.read_u8();
         cpu.execute_extended(op_code);
     }

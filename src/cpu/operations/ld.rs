@@ -16,7 +16,7 @@ impl Ld {
 }
 
 impl Operation for Ld {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.src.value(cpu);
         self.dest.set_value(cpu, value);
     }
@@ -56,7 +56,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_b(0x23);
-        Ld::new(LdTarget::A, LdTarget::B).execute(&mut cpu);
+        Ld::new(LdTarget::A, LdTarget::B).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x23);
     }
 
@@ -65,7 +65,7 @@ mod test {
         let mut cpu = with_ram(vec![0x19]);
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x00);
-        Ld::new(LdTarget::A, LdTarget::HLAddr).execute(&mut cpu);
+        Ld::new(LdTarget::A, LdTarget::HLAddr).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x19);
     }
 
@@ -74,7 +74,7 @@ mod test {
         let mut cpu = with_ram(vec![0x00]);
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x29);
-        Ld::new(LdTarget::HLAddr, LdTarget::A).execute(&mut cpu);
+        Ld::new(LdTarget::HLAddr, LdTarget::A).run(&mut cpu);
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x29);
     }
 
@@ -83,7 +83,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_hl(0x00);
         cpu.registers.set_a(0x29);
-        Ld::new(LdTarget::HLIAddr, LdTarget::A).execute(&mut cpu);
+        Ld::new(LdTarget::HLIAddr, LdTarget::A).run(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x01);
     }
 
@@ -92,7 +92,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_hl(0x25);
         cpu.registers.set_a(0x29);
-        Ld::new(LdTarget::HLDAddr, LdTarget::A).execute(&mut cpu);
+        Ld::new(LdTarget::HLDAddr, LdTarget::A).run(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x24);
     }
 

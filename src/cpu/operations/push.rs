@@ -15,7 +15,7 @@ impl Push {
 }
 
 impl Operation for Push {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let qq = self.src.value(cpu);
         let qq_h = (qq & 0x00FF) as u8;
         let qq_l = (qq >> 8) as u8;
@@ -68,7 +68,7 @@ mod test {
         cpu.registers.set_sp(0xFFFE);
 
         // PUSH BC
-        Push::new(PushPopTarget::BC).execute(&mut cpu);
+        Push::new(PushPopTarget::BC).run(&mut cpu);
 
         // (FFFDh) ← B, (FFFCh) ← B, SP ← FFFCh
         assert_eq!(cpu.mmu.get_byte(0xFFFD), cpu.registers.c());

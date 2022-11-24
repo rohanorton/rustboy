@@ -29,7 +29,7 @@ impl Adc {
 }
 
 impl Operation for Adc {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
 
         let (new_value, did_overflow) =
@@ -71,7 +71,7 @@ mod test {
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x02);
         cpu.registers.set_cy_flag(true);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x04);
     }
 
@@ -81,7 +81,7 @@ mod test {
         cpu.registers.set_a(0xF0);
         cpu.registers.set_c(0x0F);
         cpu.registers.set_cy_flag(true);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -91,7 +91,7 @@ mod test {
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(true);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -101,7 +101,7 @@ mod test {
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
         cpu.registers.set_cy_flag(true);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.n_flag());
     }
 
@@ -111,7 +111,7 @@ mod test {
         cpu.registers.set_a(0xFF);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.cy_flag());
     }
 
@@ -121,7 +121,7 @@ mod test {
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -131,7 +131,7 @@ mod test {
         cpu.registers.set_a(0x0F);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -141,7 +141,7 @@ mod test {
         cpu.registers.set_a(0x0E);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Adc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -161,7 +161,7 @@ mod test {
         cpu.registers.set_cy_flag(true);
 
         // ADC A, E
-        Adc::new(ArithmeticTarget8Bit::E).execute(&mut cpu);
+        Adc::new(ArithmeticTarget8Bit::E).run(&mut cpu);
 
         // A←F1h,Z←0,H←1,CY←0
         assert_eq!(cpu.registers.a(), 0xF1);

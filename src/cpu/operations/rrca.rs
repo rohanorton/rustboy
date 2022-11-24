@@ -7,7 +7,7 @@ use super::operation::Operation;
 pub struct Rrca;
 
 impl Operation for Rrca {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let a = cpu.registers.a();
         let rot_a = a.rotate_right(1);
         cpu.registers.set_a(rot_a);
@@ -51,7 +51,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RRCA
-        Rrca.execute(&mut cpu);
+        Rrca.run(&mut cpu);
 
         // A←9Dh,CY←1,Z←0,H←0,N←0
         assert_eq!(cpu.registers.a(), 0x9D);

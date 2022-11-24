@@ -16,7 +16,7 @@ impl Sra {
 }
 
 impl Operation for Sra {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         // Shifts the contents of operand m to the right. That is, the contents
         // of bit 7 are copied to bit 6 and the previous contents of bit 6 (the
         // contents before the copy operation) are copied to bit 5. The same
@@ -76,7 +76,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // SRA A
-        Sra::new(ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Sra::new(ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←C5h,CY←0,Z←0,H←0,N←0
         assert_eq!(cpu.registers.a(), 0xC5);
@@ -95,7 +95,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // SRA (HL)
-        Sra::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        Sra::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         //(HL)←00h,CY←1,Z←1,H←0,N←0
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x00);

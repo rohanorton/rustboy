@@ -15,7 +15,7 @@ impl Dec {
 }
 
 impl Operation for Dec {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let new_value = value.wrapping_sub(1);
 
@@ -51,7 +51,7 @@ mod test {
     fn decrements_register() {
         let mut cpu = empty();
         cpu.registers.set_c(0x02);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.c(), 0x01);
     }
 
@@ -59,7 +59,7 @@ mod test {
     fn sets_zero_flag_when_result_eq_0() {
         let mut cpu = empty();
         cpu.registers.set_c(0x01);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -67,14 +67,14 @@ mod test {
     fn unsets_zero_flag_when_result_ne_0() {
         let mut cpu = empty();
         cpu.registers.set_c(0x04);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
     #[test]
     fn sets_sub_flag() {
         let mut cpu = empty();
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.n_flag());
     }
 
@@ -83,7 +83,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_c(0x00);
         cpu.registers.set_cy_flag(false);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -92,7 +92,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_c(0xF4);
         cpu.registers.set_cy_flag(true);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.cy_flag());
     }
 
@@ -100,7 +100,7 @@ mod test {
     fn sets_halfcarry_flag_on_lower_nibble_overflow() {
         let mut cpu = empty();
         cpu.registers.set_c(0x10);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -108,7 +108,7 @@ mod test {
     fn unsets_halfcarry_flag_when_no_lower_nibble_overflow() {
         let mut cpu = empty();
         cpu.registers.set_c(0xF1);
-        Dec::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -127,7 +127,7 @@ mod test {
         cpu.registers.set_e(0x3E);
 
         // DEC L
-        Dec::new(ArithmeticTarget8Bit::L).execute(&mut cpu);
+        Dec::new(ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L←0,Z←1,H←0,N←1
         assert_eq!(cpu.registers.l(), 0);

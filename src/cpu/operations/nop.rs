@@ -6,7 +6,7 @@ use super::operation::Operation;
 pub struct Nop;
 
 impl Operation for Nop {
-    fn execute(&self, _cpu: &mut Cpu) {}
+    fn run(&self, _cpu: &mut Cpu) {}
 }
 
 impl fmt::Display for Nop {

@@ -16,7 +16,7 @@ impl Rlc {
 }
 
 impl Operation for Rlc {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let rot_x = x.rotate_left(1);
         self.operand.set_value(cpu, rot_x);
@@ -71,7 +71,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RLC B
-        Rlc::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
+        Rlc::new(ArithmeticTarget8Bit::B).run(&mut cpu);
 
         // B←0Bh,CY←1,Z←0,H←0,N←0
         assert_eq!(cpu.registers.b(), 0x0B);
@@ -90,7 +90,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RLC (HL)
-        Rlc::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        Rlc::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         // (HL)←00h,CY←0,Z←1,H←0,N←0
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x00);

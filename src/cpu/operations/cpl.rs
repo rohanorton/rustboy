@@ -6,7 +6,7 @@ use super::operation::Operation;
 pub struct Cpl;
 
 impl Operation for Cpl {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         // Takes the one’s complement of the contents of register A.
         let a = cpu.registers.a();
         cpu.registers.set_a(!a);
@@ -38,14 +38,14 @@ mod test {
     fn sets_sub_flag() {
         let mut cpu = empty();
         cpu.registers.set_n_flag(true);
-        Cpl.execute(&mut cpu);
+        Cpl.run(&mut cpu);
         assert!(cpu.registers.n_flag());
     }
 
     #[test]
     fn sets_halfcarry_flag() {
         let mut cpu = empty();
-        Cpl.execute(&mut cpu);
+        Cpl.run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -63,7 +63,7 @@ mod test {
         cpu.registers.set_a(0x35);
 
         // CPL
-        Cpl.execute(&mut cpu);
+        Cpl.run(&mut cpu);
 
         // A ← CAh
         assert_eq!(cpu.registers.a(), 0xCA);

@@ -20,7 +20,7 @@ impl Res {
 }
 
 impl Operation for Res {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let mask = 1 << self.bit_number;
         self.operand.set_value(cpu, x & !mask);
@@ -60,7 +60,7 @@ mod test {
         cpu.registers.set_a(0x80);
 
         // RES 7,A
-        Res::new(7, ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Res::new(7, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←00h
         assert_eq!(cpu.registers.a(), 0x00);
@@ -74,7 +74,7 @@ mod test {
         cpu.registers.set_l(0x3B);
 
         // RES 1, L
-        Res::new(1, ArithmeticTarget8Bit::L).execute(&mut cpu);
+        Res::new(1, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L ← 39h
         assert_eq!(cpu.registers.l(), 0x39);

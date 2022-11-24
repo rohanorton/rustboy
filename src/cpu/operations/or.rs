@@ -15,7 +15,7 @@ impl Or {
 }
 
 impl Operation for Or {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let new_value = cpu.registers.a() | value;
 
@@ -53,7 +53,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x05);
         cpu.registers.set_c(0x03);
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x07);
     }
 
@@ -62,7 +62,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x00);
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -71,28 +71,28 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x01);
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
     #[test]
     fn unsets_sub_flag() {
         let mut cpu = empty();
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.n_flag());
     }
 
     #[test]
     fn unsets_carry_flag() {
         let mut cpu = empty();
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
     #[test]
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
-        Or::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -110,7 +110,7 @@ mod test {
         cpu.registers.set_a(0x5A);
 
         // OR A
-        Or::new(ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Or::new(ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←5Ah,Z←0
         assert_eq!(cpu.registers.a(), 0x5A);

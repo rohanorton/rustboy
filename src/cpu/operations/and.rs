@@ -15,7 +15,7 @@ impl And {
 }
 
 impl Operation for And {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let new_value = cpu.registers.a() & value;
 
@@ -53,7 +53,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x11);
         cpu.registers.set_c(0x01);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x01);
     }
 
@@ -62,7 +62,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x00);
         cpu.registers.set_c(0x00);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -71,7 +71,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x01);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -80,7 +80,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.n_flag());
     }
 
@@ -89,7 +89,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -98,7 +98,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x0F);
         cpu.registers.set_c(0x01);
-        And::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -117,7 +117,7 @@ mod test {
         cpu.registers.set_l(0x3F);
 
         // AND L
-        And::new(ArithmeticTarget8Bit::L).execute(&mut cpu);
+        And::new(ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // A←1Ah,Z←0,H←1,N←0 CY←0
         assert_eq!(cpu.registers.a(), 0x1A);

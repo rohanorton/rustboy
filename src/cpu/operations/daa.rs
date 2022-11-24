@@ -10,7 +10,7 @@ use crate::byte::lower_nibble;
 pub struct Daa;
 
 impl Operation for Daa {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let a = cpu.registers.a();
         let is_addition = !cpu.registers.n_flag();
         let has_half_carried = cpu.registers.h_flag();
@@ -69,7 +69,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_f(0);
         cpu.registers.set_a(0);
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -78,7 +78,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_f(0);
         cpu.registers.set_a(0x9A);
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0);
         assert!(cpu.registers.z_flag());
     }
@@ -87,7 +87,7 @@ mod test {
     fn unsets_zero_flag_if_ne_0() {
         let mut cpu = empty();
         cpu.registers.set_a(0x04);
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -95,7 +95,7 @@ mod test {
     fn unsets_halfcarry_flag() {
         let mut cpu = empty();
         cpu.registers.set_h_flag(true);
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -114,23 +114,23 @@ mod test {
         cpu.registers.set_b(0x38);
 
         // ADD A,B
-        Add::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
+        Add::new(ArithmeticTarget8Bit::B).run(&mut cpu);
         // A←7Dh,N←0
         assert_eq!(cpu.registers.a(), 0x7D);
 
         // DAA
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         // A←7Dh+06h(83h),CY←0
         assert_eq!(cpu.registers.a(), 0x83);
         assert!(!cpu.registers.cy_flag());
 
         // SUB A,B
-        Sub::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
+        Sub::new(ArithmeticTarget8Bit::B).run(&mut cpu);
         // A←83h–38h(4Bh),N←1
         assert_eq!(cpu.registers.a(), 0x4B);
 
         // DAA
-        Daa.execute(&mut cpu);
+        Daa.run(&mut cpu);
         // A←4Bh+FAh(45h)
         assert_eq!(cpu.registers.a(), 0x45);
     }

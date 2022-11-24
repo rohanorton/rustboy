@@ -15,7 +15,7 @@ impl AddHl {
 }
 
 impl Operation for AddHl {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let (new_value, did_carry) = cpu.registers.hl().overflowing_add(value);
 
@@ -53,7 +53,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_bc(0x010F);
         cpu.registers.set_hl(0x0201);
-        AddHl::new(ArithmeticTarget16Bit::BC).execute(&mut cpu);
+        AddHl::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x0310);
     }
 
@@ -72,7 +72,7 @@ mod test {
         cpu.registers.set_bc(0x0605);
 
         // ADDHL,BC
-        AddHl::new(ArithmeticTarget16Bit::BC).execute(&mut cpu);
+        AddHl::new(ArithmeticTarget16Bit::BC).run(&mut cpu);
 
         // HL←9028h,H←1,N←0,CY←0
         assert_eq!(cpu.registers.hl(), 0x9028);
@@ -89,7 +89,7 @@ mod test {
         cpu.registers.set_hl(0x8A23);
 
         // ADDHL,HL
-        AddHl::new(ArithmeticTarget16Bit::HL).execute(&mut cpu);
+        AddHl::new(ArithmeticTarget16Bit::HL).run(&mut cpu);
 
         // HL←1446h,H←1,N←0,CY←1
         assert_eq!(cpu.registers.hl(), 0x1446);

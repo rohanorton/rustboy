@@ -16,7 +16,7 @@ impl Rl {
 }
 
 impl Operation for Rl {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let carry_bit = cpu.registers.cy_flag() as u8;
         let rot_x = x << 1 | carry_bit;
@@ -72,7 +72,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RL L
-        Rl::new(ArithmeticTarget8Bit::L).execute(&mut cpu);
+        Rl::new(ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L←00h,CY←1,Z←1,H←0,N←0
         assert_eq!(cpu.registers.l(), 0x00);
@@ -91,7 +91,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RL (HL)
-        Rl::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        Rl::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         // (HL)←22h,CY←0,Z←0,H←0,N←0
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x22);

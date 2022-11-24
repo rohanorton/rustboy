@@ -7,7 +7,7 @@ use super::operation::Operation;
 pub struct Rlca;
 
 impl Operation for Rlca {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         // That is, the contents of bit 0 are copied to bit 1 and the previous
         // contents of bit 1 (the contents before the copy operation) are copied
         // to bit 2. The same operation is repeated in sequence for the rest of
@@ -56,7 +56,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RLCA
-        Rlca.execute(&mut cpu);
+        Rlca.run(&mut cpu);
 
         // A←0Ah,CY←1,Z←0,H←0,N←0
         // NOTE: The documentation says, A=0x0A, but this doesn't make sense according to the

@@ -6,7 +6,7 @@ use super::operation::Operation;
 pub struct AddSp;
 
 impl Operation for AddSp {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let r8 = cpu.read_u8() as i8;
         let a = cpu.registers.sp();
         let b = r8 as u16;
@@ -49,7 +49,7 @@ mod test {
         let mut cpu = with_ram(vec![0x41]);
         cpu.registers.set_pc(0x0000); // ensure first byte read
         cpu.registers.set_sp(0x010F);
-        AddSp.execute(&mut cpu);
+        AddSp.run(&mut cpu);
         assert_eq!(cpu.registers.sp(), 0x0150);
     }
 
@@ -60,7 +60,7 @@ mod test {
         let mut cpu = with_ram(vec![neg_two]);
         cpu.registers.set_pc(0x0000); // ensure first byte read
         cpu.registers.set_sp(0x010F);
-        AddSp.execute(&mut cpu);
+        AddSp.run(&mut cpu);
         assert_eq!(cpu.registers.sp(), 0x010D);
     }
 
@@ -80,7 +80,7 @@ mod test {
         cpu.registers.set_sp(0xFFF8);
 
         // ADDSP,2
-        AddSp.execute(&mut cpu);
+        AddSp.run(&mut cpu);
 
         // SP←0xFFFA,CY←0,H←0,N←0,Z←0
         assert_eq!(cpu.registers.sp(), 0xFFFA);

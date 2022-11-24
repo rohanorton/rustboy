@@ -29,7 +29,7 @@ impl Sbc {
 }
 
 impl Operation for Sbc {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let (new_value, did_overflow) =
             Self::carrying_sub(cpu.registers.a(), value, cpu.registers.cy_flag());
@@ -70,7 +70,7 @@ mod test {
         cpu.registers.set_a(0x04);
         cpu.registers.set_c(0x02);
         cpu.registers.set_cy_flag(true);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x01);
     }
 
@@ -80,7 +80,7 @@ mod test {
         cpu.registers.set_a(0x04);
         cpu.registers.set_c(0x04);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -90,7 +90,7 @@ mod test {
         cpu.registers.set_a(0x03);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -100,7 +100,7 @@ mod test {
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.n_flag());
     }
 
@@ -109,7 +109,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x44);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.cy_flag());
     }
 
@@ -119,7 +119,7 @@ mod test {
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -129,7 +129,7 @@ mod test {
         cpu.registers.set_a(0x10);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -139,7 +139,7 @@ mod test {
         cpu.registers.set_a(0x1E);
         cpu.registers.set_c(0x01);
         cpu.registers.set_cy_flag(false);
-        Sbc::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -159,7 +159,7 @@ mod test {
         cpu.registers.set_cy_flag(true);
 
         // SBC A, H
-        Sbc::new(ArithmeticTarget8Bit::H).execute(&mut cpu);
+        Sbc::new(ArithmeticTarget8Bit::H).run(&mut cpu);
 
         // A←10h,Z←0,H←0,N←1 CY←0
         assert_eq!(cpu.registers.a(), 0x10);

@@ -16,7 +16,7 @@ impl Sla {
 }
 
 impl Operation for Sla {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let shift_x = x << 1;
         self.operand.set_value(cpu, shift_x);
@@ -71,7 +71,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // SLA D
-        Sla::new(ArithmeticTarget8Bit::D).execute(&mut cpu);
+        Sla::new(ArithmeticTarget8Bit::D).run(&mut cpu);
 
         // D←00h,CY←1,Z←1,H←0,N←0
         assert_eq!(cpu.registers.d(), 0x00);
@@ -90,7 +90,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // SLA (HL)
-        Sla::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        Sla::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         // (HL)←FEh,CY←1,Z←0,H←0,N←0
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0xFE);

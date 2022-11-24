@@ -16,7 +16,7 @@ impl Swap {
 }
 
 impl Operation for Swap {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let swapped = x << 4 | x >> 4;
         self.operand.set_value(cpu, swapped);
@@ -70,7 +70,7 @@ mod test {
         cpu.registers.set_a(0x00);
 
         // SWAP A
-        Swap::new(ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Swap::new(ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←00h,Z←1,H←0,N←0,CY←0
         assert_eq!(cpu.registers.a(), 0x00);
@@ -88,7 +88,7 @@ mod test {
         cpu.mmu.set_byte(cpu.registers.hl(), 0xF0);
 
         // SWAP(HL)
-        Swap::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        Swap::new(ArithmeticTarget8Bit::HLAddr).run(&mut cpu);
 
         // (HL)←0Fh,Z←0,H←0,N←0,CY←0
         assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x0F);

@@ -45,7 +45,7 @@ impl Cpu {
             lookup_op_code(op_code)
         };
         self.remaining_cycles += cycles;
-        op.execute(self);
+        op.run(self);
     }
 }
 

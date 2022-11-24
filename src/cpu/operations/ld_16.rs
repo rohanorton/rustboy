@@ -16,7 +16,7 @@ impl Ld16 {
 }
 
 impl Operation for Ld16 {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.src.value(cpu);
         self.dest.set_value(cpu, value);
     }
@@ -56,7 +56,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_bc(0x0000);
         cpu.registers.set_hl(0x1234);
-        Ld16::new(Ld16Target::BC, Ld16Target::HL).execute(&mut cpu);
+        Ld16::new(Ld16Target::BC, Ld16Target::HL).run(&mut cpu);
         assert_eq!(cpu.registers.hl(), 0x1234);
     }
 
@@ -80,7 +80,7 @@ mod test {
         cpu.registers.set_sp(0xFFF8);
 
         // LD (C100h),SP
-        Ld16::new(Ld16Target::A16, Ld16Target::SP).execute(&mut cpu);
+        Ld16::new(Ld16Target::A16, Ld16Target::SP).run(&mut cpu);
 
         // C100h ← F8h
         assert_eq!(cpu.mmu.get_byte(0xC100), 0xF8);

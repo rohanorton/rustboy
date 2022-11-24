@@ -15,7 +15,7 @@ impl Pop {
 }
 
 impl Operation for Pop {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let qq_l = cpu.mmu.get_byte(cpu.registers.sp()) as u16;
         cpu.registers.incr_sp();
         let qq_h = cpu.mmu.get_byte(cpu.registers.sp()) as u16;
@@ -68,7 +68,7 @@ mod test {
         cpu.mmu.set_byte(0xFFFD, 0x3C);
 
         // POP BC
-        Pop::new(PushPopTarget::BC).execute(&mut cpu);
+        Pop::new(PushPopTarget::BC).run(&mut cpu);
 
         // B ← 3Ch, C ← 5Fh, SP ← FFFEh
         assert_eq!(cpu.registers.b(), 0x3C);

@@ -7,7 +7,7 @@ use super::operation::Operation;
 pub struct Rra;
 
 impl Operation for Rra {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let a = cpu.registers.a();
         let carry_bit = cpu.registers.cy_flag() as u8;
         let rot_a = a >> 1 | carry_bit << 7;
@@ -52,7 +52,7 @@ mod test {
         cpu.registers.set_cy_flag(false);
 
         // RRA
-        Rra.execute(&mut cpu);
+        Rra.run(&mut cpu);
 
         // A←40h,CY←1,Z←0,H←0,N←0
         assert_eq!(cpu.registers.a(), 0x40);

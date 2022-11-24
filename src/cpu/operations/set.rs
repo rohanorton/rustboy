@@ -20,7 +20,7 @@ impl Set {
 }
 
 impl Operation for Set {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let mask = 1 << self.bit_number;
         self.operand.set_value(cpu, x | mask);
@@ -61,7 +61,7 @@ mod test {
 
         // NOTE: This example seems to be wrong in the manual, giving the operation SET 3,A.
         // SET 2,A
-        Set::new(2, ArithmeticTarget8Bit::A).execute(&mut cpu);
+        Set::new(2, ArithmeticTarget8Bit::A).run(&mut cpu);
 
         // A←0x84
         assert_eq!(cpu.registers.a(), 0x84);
@@ -75,7 +75,7 @@ mod test {
         cpu.registers.set_l(0x3B);
 
         // SET 7, L
-        Set::new(7, ArithmeticTarget8Bit::L).execute(&mut cpu);
+        Set::new(7, ArithmeticTarget8Bit::L).run(&mut cpu);
 
         // L←0xBB
         assert_eq!(cpu.registers.l(), 0xBB);

@@ -16,7 +16,7 @@ impl Cp {
 }
 
 impl Operation for Cp {
-    fn execute(&self, cpu: &mut Cpu) {
+    fn run(&self, cpu: &mut Cpu) {
         let value = self.target.value(cpu);
         let (new_value, did_overflow) = cpu.registers.a().overflowing_sub(value);
 
@@ -54,7 +54,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x11);
         cpu.registers.set_c(0x0F);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert_eq!(cpu.registers.a(), 0x11);
     }
 
@@ -63,7 +63,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x04);
         cpu.registers.set_c(0x04);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.z_flag());
     }
 
@@ -72,7 +72,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x03);
         cpu.registers.set_c(0x01);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.z_flag());
     }
 
@@ -81,7 +81,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x02);
         cpu.registers.set_c(0x04);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.n_flag());
     }
 
@@ -90,7 +90,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x01);
         cpu.registers.set_c(0x44);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.cy_flag());
     }
 
@@ -99,7 +99,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0xFE);
         cpu.registers.set_c(0x01);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.cy_flag());
     }
 
@@ -108,7 +108,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x10);
         cpu.registers.set_c(0x01);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(cpu.registers.h_flag());
     }
 
@@ -117,7 +117,7 @@ mod test {
         let mut cpu = empty();
         cpu.registers.set_a(0x1E);
         cpu.registers.set_c(0x01);
-        Cp::new(ArithmeticTarget8Bit::C).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::C).run(&mut cpu);
         assert!(!cpu.registers.h_flag());
     }
 
@@ -136,7 +136,7 @@ mod test {
         cpu.registers.set_b(0x2F);
 
         // CP B
-        Cp::new(ArithmeticTarget8Bit::B).execute(&mut cpu);
+        Cp::new(ArithmeticTarget8Bit::B).run(&mut cpu);
 
         // Z←0,H←1,N←1,CY←0
         assert!(!cpu.registers.z_flag());
