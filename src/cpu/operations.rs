@@ -12,6 +12,7 @@ pub mod dec;
 pub mod dec_16;
 pub mod inc;
 pub mod inc_16;
+pub mod jp;
 pub mod ld;
 pub mod ld_16;
 pub mod nop;

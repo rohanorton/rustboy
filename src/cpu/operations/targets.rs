@@ -325,3 +325,30 @@ impl fmt::Display for PushPopTarget {
         )
     }
 }
+
+pub enum AddressTarget {
+    A16,
+    HLAddr,
+}
+
+impl AddressTarget {
+    pub fn value(&self, cpu: &mut Cpu) -> u16 {
+        match self {
+            Self::A16 => cpu.read_u16(),
+            Self::HLAddr => cpu.registers.hl(),
+        }
+    }
+}
+
+impl fmt::Display for AddressTarget {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::A16 => "a16",
+                Self::HLAddr => "(HL)",
+            }
+        )
+    }
+}

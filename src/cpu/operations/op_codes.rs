@@ -1,6 +1,6 @@
 use super::operation::Operation;
 use super::targets::{
-    ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget, PushPopTarget,
+    AddressTarget, ArithmeticTarget16Bit, ArithmeticTarget8Bit, Ld16Target, LdTarget, PushPopTarget,
 };
 
 use super::adc::Adc;
@@ -16,6 +16,7 @@ use super::dec::Dec;
 use super::dec_16::Dec16;
 use super::inc::Inc;
 use super::inc_16::Inc16;
+use super::jp::Jp;
 use super::ld::Ld;
 use super::ld_16::Ld16;
 use super::nop::Nop;
@@ -251,6 +252,8 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
 
         0xC1 => Pop::new(PushPopTarget::BC), 12;
 
+        0xC3 => Jp::new(AddressTarget::A16), 16;
+
         0xC5 => Push::new(PushPopTarget::BC), 16;
         0xC6 => Add::new(ArithmeticTarget8Bit::D8), 8;
 
@@ -273,7 +276,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xE6 => And::new(ArithmeticTarget8Bit::D8), 8;
 
         0xE8 => AddSp, 16;
-
+        0xE9 => Jp::new(AddressTarget::HLAddr), 4;
         0xEA => Ld::new(LdTarget::A, LdTarget::A16), 16;
 
         0xEE => Xor::new(ArithmeticTarget8Bit::D8), 8;
