@@ -19,6 +19,7 @@ pub mod operation;
 pub mod or;
 pub mod pop;
 pub mod push;
+pub mod rla;
 pub mod rlca;
 pub mod sbc;
 pub mod scf;
