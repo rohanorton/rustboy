@@ -27,6 +27,7 @@ use super::jr::Jr;
 use super::jr_cond::ConditionalJr;
 use super::ld::Ld;
 use super::ld_16::Ld16;
+use super::ld_hl_sp::LdHlSp;
 use super::nop::Nop;
 use super::or::Or;
 use super::pop::Pop;
@@ -320,7 +321,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xF5 => Push::new(PushPopTarget::AF), 16;
         0xF6 => Or::new(ArithmeticTarget8Bit::D8), 8;
         0xF7 => Rst::new(0x30), 16;
-
+        0xF8 => LdHlSp, 12;
         0xF9 => Ld16::new(Ld16Target::SP, Ld16Target::HL), 8;
         0xFA => Ld::new(LdTarget::A16, LdTarget::A), 16;
         0xFB => Ei, 4;
