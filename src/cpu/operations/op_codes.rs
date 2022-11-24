@@ -20,6 +20,7 @@ use super::inc_16::Inc16;
 use super::jp::Jp;
 use super::jp_cond::ConditionalJp;
 use super::jr::Jr;
+use super::jr_cond::ConditionalJr;
 use super::ld::Ld;
 use super::ld_16::Ld16;
 use super::nop::Nop;
@@ -81,6 +82,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x1E => Ld::new(LdTarget::E, LdTarget::D8), 8;
         0x1F => Rra, 4;
 
+        0x20 => ConditionalJr::new(Condition::NZ), 12;
         0x21 => Ld16::new(Ld16Target::HL, Ld16Target::D16), 12;
         0x22 => Ld::new(LdTarget::HLIAddr, LdTarget::A), 8;
         0x23 => Inc16::new(ArithmeticTarget16Bit::HL), 8;
@@ -88,7 +90,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x25 => Dec::new(ArithmeticTarget8Bit::H), 4;
         0x26 => Ld::new(LdTarget::H, LdTarget::D8), 8;
         0x27 => Daa, 4;
-
+        0x28 => ConditionalJr::new(Condition::Z), 12;
         0x29 => AddHl::new(ArithmeticTarget16Bit::HL), 8;
         0x2A => Ld::new(LdTarget::A, LdTarget::HLIAddr), 8;
         0x2B => Dec16::new(ArithmeticTarget16Bit::HL), 8;
@@ -97,6 +99,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x2E => Ld::new(LdTarget::L, LdTarget::D8), 8;
         0x2F => Cpl, 4;
 
+        0x30 => ConditionalJr::new(Condition::NC), 12;
         0x31 => Ld16::new(Ld16Target::SP, Ld16Target::D16), 12;
         0x32 => Ld::new(LdTarget::HLDAddr, LdTarget::A), 8;
         0x33 => Inc16::new(ArithmeticTarget16Bit::SP), 8;
@@ -104,7 +107,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x35 => Dec::new(ArithmeticTarget8Bit::HLAddr), 12;
         0x36 => Ld::new(LdTarget::HLAddr, LdTarget::D8), 12;
         0x37 => Scf, 4;
-
+        0x38 => ConditionalJr::new(Condition::C), 12;
         0x39 => AddHl::new(ArithmeticTarget16Bit::SP), 8;
         0x3A => Ld::new(LdTarget::A, LdTarget::HLIAddr), 8;
         0x3B => Dec16::new(ArithmeticTarget16Bit::SP), 8;

@@ -16,6 +16,7 @@ pub mod inc_16;
 pub mod jp;
 pub mod jp_cond;
 pub mod jr;
+pub mod jr_cond;
 pub mod ld;
 pub mod ld_16;
 pub mod nop;
