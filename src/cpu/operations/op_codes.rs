@@ -30,6 +30,7 @@ use super::or::Or;
 use super::pop::Pop;
 use super::prefix_cb::PrefixCB;
 use super::push::Push;
+use super::ret::Ret;
 use super::rla::Rla;
 use super::rlca::Rlca;
 use super::rra::Rra;
@@ -265,6 +266,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xC5 => Push::new(PushPopTarget::BC), 16;
         0xC6 => Add::new(ArithmeticTarget8Bit::D8), 8;
 
+        0xC9 => Ret, 16;
         0xCA => ConditionalJp::new(Condition::Z, AddressTarget::A16), 16;
         0xCB => PrefixCB, 4;
         0xCC => ConditionalCall::new(Condition::Z), 24;
