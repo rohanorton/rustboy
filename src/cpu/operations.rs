@@ -31,6 +31,7 @@ pub mod rrc;
 pub mod rrca;
 pub mod sbc;
 pub mod scf;
+pub mod sla;
 pub mod sub;
 pub mod targets;
 pub mod xor;
