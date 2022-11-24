@@ -33,6 +33,7 @@ pub mod rrc;
 pub mod rrca;
 pub mod sbc;
 pub mod scf;
+pub mod set;
 pub mod sla;
 pub mod sra;
 pub mod srl;

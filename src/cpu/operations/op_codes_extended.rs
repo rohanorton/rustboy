@@ -7,6 +7,7 @@ use super::rl::Rl;
 use super::rlc::Rlc;
 use super::rr::Rr;
 use super::rrc::Rrc;
+use super::set::Set;
 use super::sla::Sla;
 use super::sra::Sra;
 use super::srl::Srl;
@@ -18,7 +19,6 @@ macro_rules! boxed_operation {(
 ) => (
     match $op_code {
         $($lhs => (::std::boxed::Box::new($rhs), $cycles),)+
-        _ => panic!("Unimplemented Extended Op Code {:#02x}", $op_code),
     }
 )}
 
@@ -227,5 +227,73 @@ pub fn lookup_extended_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0xBD => Res::new(7, ArithmeticTarget8Bit::L), 8;
         0xBE => Res::new(7, ArithmeticTarget8Bit::HLAddr), 16;
         0xBF => Res::new(7, ArithmeticTarget8Bit::A), 8;
+
+        0xC0 => Set::new(0, ArithmeticTarget8Bit::B), 8;
+        0xC1 => Set::new(0, ArithmeticTarget8Bit::C), 8;
+        0xC2 => Set::new(0, ArithmeticTarget8Bit::D), 8;
+        0xC3 => Set::new(0, ArithmeticTarget8Bit::E), 8;
+        0xC4 => Set::new(0, ArithmeticTarget8Bit::H), 8;
+        0xC5 => Set::new(0, ArithmeticTarget8Bit::L), 8;
+        0xC6 => Set::new(0, ArithmeticTarget8Bit::HLAddr), 16;
+        0xC7 => Set::new(0, ArithmeticTarget8Bit::A), 8;
+        0xC8 => Set::new(1, ArithmeticTarget8Bit::B), 8;
+        0xC9 => Set::new(1, ArithmeticTarget8Bit::C), 8;
+        0xCA => Set::new(1, ArithmeticTarget8Bit::D), 8;
+        0xCB => Set::new(1, ArithmeticTarget8Bit::E), 8;
+        0xCC => Set::new(1, ArithmeticTarget8Bit::H), 8;
+        0xCD => Set::new(1, ArithmeticTarget8Bit::L), 8;
+        0xCE => Set::new(1, ArithmeticTarget8Bit::HLAddr), 16;
+        0xCF => Set::new(1, ArithmeticTarget8Bit::A), 8;
+
+        0xD0 => Set::new(2, ArithmeticTarget8Bit::B), 8;
+        0xD1 => Set::new(2, ArithmeticTarget8Bit::C), 8;
+        0xD2 => Set::new(2, ArithmeticTarget8Bit::D), 8;
+        0xD3 => Set::new(2, ArithmeticTarget8Bit::E), 8;
+        0xD4 => Set::new(2, ArithmeticTarget8Bit::H), 8;
+        0xD5 => Set::new(2, ArithmeticTarget8Bit::L), 8;
+        0xD6 => Set::new(2, ArithmeticTarget8Bit::HLAddr), 16;
+        0xD7 => Set::new(2, ArithmeticTarget8Bit::A), 8;
+        0xD8 => Set::new(3, ArithmeticTarget8Bit::B), 8;
+        0xD9 => Set::new(3, ArithmeticTarget8Bit::C), 8;
+        0xDA => Set::new(3, ArithmeticTarget8Bit::D), 8;
+        0xDB => Set::new(3, ArithmeticTarget8Bit::E), 8;
+        0xDC => Set::new(3, ArithmeticTarget8Bit::H), 8;
+        0xDD => Set::new(3, ArithmeticTarget8Bit::L), 8;
+        0xDE => Set::new(3, ArithmeticTarget8Bit::HLAddr), 16;
+        0xDF => Set::new(3, ArithmeticTarget8Bit::A), 8;
+
+        0xE0 => Set::new(4, ArithmeticTarget8Bit::B), 8;
+        0xE1 => Set::new(4, ArithmeticTarget8Bit::C), 8;
+        0xE2 => Set::new(4, ArithmeticTarget8Bit::D), 8;
+        0xE3 => Set::new(4, ArithmeticTarget8Bit::E), 8;
+        0xE4 => Set::new(4, ArithmeticTarget8Bit::H), 8;
+        0xE5 => Set::new(4, ArithmeticTarget8Bit::L), 8;
+        0xE6 => Set::new(4, ArithmeticTarget8Bit::HLAddr), 16;
+        0xE7 => Set::new(4, ArithmeticTarget8Bit::A), 8;
+        0xE8 => Set::new(5, ArithmeticTarget8Bit::B), 8;
+        0xE9 => Set::new(5, ArithmeticTarget8Bit::C), 8;
+        0xEA => Set::new(5, ArithmeticTarget8Bit::D), 8;
+        0xEB => Set::new(5, ArithmeticTarget8Bit::E), 8;
+        0xEC => Set::new(5, ArithmeticTarget8Bit::H), 8;
+        0xED => Set::new(5, ArithmeticTarget8Bit::L), 8;
+        0xEE => Set::new(5, ArithmeticTarget8Bit::HLAddr), 16;
+        0xEF => Set::new(5, ArithmeticTarget8Bit::A), 8;
+
+        0xF0 => Set::new(6, ArithmeticTarget8Bit::B), 8;
+        0xF1 => Set::new(6, ArithmeticTarget8Bit::C), 8;
+        0xF2 => Set::new(6, ArithmeticTarget8Bit::D), 8;
+        0xF3 => Set::new(6, ArithmeticTarget8Bit::E), 8;
+        0xF4 => Set::new(6, ArithmeticTarget8Bit::H), 8;
+        0xF5 => Set::new(6, ArithmeticTarget8Bit::L), 8;
+        0xF6 => Set::new(6, ArithmeticTarget8Bit::HLAddr), 16;
+        0xF7 => Set::new(6, ArithmeticTarget8Bit::A), 8;
+        0xF8 => Set::new(7, ArithmeticTarget8Bit::B), 8;
+        0xF9 => Set::new(7, ArithmeticTarget8Bit::C), 8;
+        0xFA => Set::new(7, ArithmeticTarget8Bit::D), 8;
+        0xFB => Set::new(7, ArithmeticTarget8Bit::E), 8;
+        0xFC => Set::new(7, ArithmeticTarget8Bit::H), 8;
+        0xFD => Set::new(7, ArithmeticTarget8Bit::L), 8;
+        0xFE => Set::new(7, ArithmeticTarget8Bit::HLAddr), 16;
+        0xFF => Set::new(7, ArithmeticTarget8Bit::A), 8;
     })
 }
