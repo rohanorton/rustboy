@@ -25,6 +25,7 @@ pub mod rl;
 pub mod rla;
 pub mod rlc;
 pub mod rlca;
+pub mod rr;
 pub mod rra;
 pub mod rrc;
 pub mod rrca;

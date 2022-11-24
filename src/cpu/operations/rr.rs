@@ -4,33 +4,33 @@ use super::super::cpu::Cpu;
 use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
 
-// Rotates the contents of operand to the left.
-pub struct Rl {
+// Rotates the contents of operand to the right.
+pub struct Rr {
     operand: ArithmeticTarget8Bit,
 }
 
-impl Rl {
+impl Rr {
     pub fn new(operand: ArithmeticTarget8Bit) -> Self {
-        Rl { operand }
+        Rr { operand }
     }
 }
 
-impl Operation for Rl {
+impl Operation for Rr {
     fn execute(&self, cpu: &mut Cpu) {
         let x = self.operand.value(cpu);
         let carry_bit = cpu.registers.cy_flag() as u8;
-        let rot_x = x << 1 | carry_bit;
+        let rot_x = x >> 1 | carry_bit << 7;
         self.operand.set_value(cpu, rot_x);
-        cpu.registers.set_cy_flag(x >> 7 != 0);
+        cpu.registers.set_cy_flag(x & 1 != 0);
         cpu.registers.set_z_flag(rot_x == 0);
         cpu.registers.set_h_flag(false);
         cpu.registers.set_n_flag(false);
     }
 }
 
-impl fmt::Display for Rl {
+impl fmt::Display for Rr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "RL {}", self.operand)
+        write!(f, "RR {}", self.operand)
     }
 }
 
@@ -43,7 +43,7 @@ mod test {
     use super::ArithmeticTarget8Bit;
     use super::Cpu;
     use super::Operation;
-    use super::Rl;
+    use super::Rr;
 
     fn empty() -> Cpu {
         Cpu::new(Void)
@@ -59,23 +59,23 @@ mod test {
 
     #[test]
     fn display_trait() {
-        let op = Rl::new(ArithmeticTarget8Bit::C);
-        assert_eq!(format!("{op}"), "RL C");
+        let op = Rr::new(ArithmeticTarget8Bit::C);
+        assert_eq!(format!("{op}"), "RR C");
     }
 
     #[test]
     fn example_1_from_gameboy_programming_manual() {
         let mut cpu = empty();
 
-        // When L = 80h, and CY = 0,
-        cpu.registers.set_l(0x80);
+        // When A = 1h, CY = 0,
+        cpu.registers.set_a(0x01);
         cpu.registers.set_cy_flag(false);
 
-        // RL L
-        Rl::new(ArithmeticTarget8Bit::L).execute(&mut cpu);
+        // RR A
+        Rr::new(ArithmeticTarget8Bit::A).execute(&mut cpu);
 
-        // L←00h,CY←1,Z←1,H←0,N←0
-        assert_eq!(cpu.registers.l(), 0x00);
+        // A←00h,CY←1,Z←1,H←0,N←0
+        assert_eq!(cpu.registers.a(), 0x00);
         assert!(cpu.registers.cy_flag(), "Carry flag should be set");
         assert!(cpu.registers.z_flag(), "Zero flag should be set");
         assert!(!cpu.registers.h_flag(), "Half-Carry flag should not be set");
@@ -86,15 +86,15 @@ mod test {
     fn example_2_from_gameboy_programming_manual() {
         let mut cpu = with_ram(vec![0x00; 0xFFFF]);
 
-        // When (HL) = 11h, and CY = 0,
-        cpu.mmu.set_byte(cpu.registers.hl(), 0x11);
+        // When (HL) = 8Ah, CY = 0,
+        cpu.mmu.set_byte(cpu.registers.hl(), 0x8A);
         cpu.registers.set_cy_flag(false);
 
-        // RL (HL)
-        Rl::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
+        // RR (HL)
+        Rr::new(ArithmeticTarget8Bit::HLAddr).execute(&mut cpu);
 
-        // (HL)←22h,CY←0,Z←0,H←0,N←0
-        assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x22);
+        // (HL)←45h,CY←0,Z←0,H←0,N←0
+        assert_eq!(cpu.mmu.get_byte(cpu.registers.hl()), 0x45);
         assert!(!cpu.registers.z_flag(), "Zero flag should not be set");
         assert!(!cpu.registers.cy_flag(), "Carry flag should not be set");
         assert!(!cpu.registers.h_flag(), "Half-Carry flag should not be set");

@@ -3,6 +3,7 @@ use super::targets::ArithmeticTarget8Bit;
 
 use super::rl::Rl;
 use super::rlc::Rlc;
+use super::rr::Rr;
 use super::rrc::Rrc;
 
 // Macro to simplify op-code match creation. Wraps result in Box, to prevent type error.
@@ -42,5 +43,13 @@ pub fn lookup_extended_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x15 => Rl::new(ArithmeticTarget8Bit::L), 8;
         0x16 => Rl::new(ArithmeticTarget8Bit::HLAddr), 16;
         0x17 => Rl::new(ArithmeticTarget8Bit::A), 8;
+        0x18 => Rr::new(ArithmeticTarget8Bit::B), 8;
+        0x19 => Rr::new(ArithmeticTarget8Bit::C), 8;
+        0x1A => Rr::new(ArithmeticTarget8Bit::D), 8;
+        0x1B => Rr::new(ArithmeticTarget8Bit::E), 8;
+        0x1C => Rr::new(ArithmeticTarget8Bit::H), 8;
+        0x1D => Rr::new(ArithmeticTarget8Bit::L), 8;
+        0x1E => Rr::new(ArithmeticTarget8Bit::HLAddr), 16;
+        0x1F => Rr::new(ArithmeticTarget8Bit::A), 8;
     })
 }
