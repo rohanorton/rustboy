@@ -19,6 +19,7 @@ use super::dec::Dec;
 use super::dec_16::Dec16;
 use super::di::Di;
 use super::ei::Ei;
+use super::halt::Halt;
 use super::inc::Inc;
 use super::inc_16::Inc16;
 use super::jp::Jp;
@@ -182,7 +183,7 @@ pub fn lookup_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x73 => Ld::new(LdTarget::HLAddr, LdTarget::E), 8;
         0x74 => Ld::new(LdTarget::HLAddr, LdTarget::H), 8;
         0x75 => Ld::new(LdTarget::HLAddr, LdTarget::L), 8;
-
+        0x76 => Halt, 4;
         0x77 => Ld::new(LdTarget::HLAddr, LdTarget::A), 8;
         0x78 => Ld::new(LdTarget::A, LdTarget::B), 4;
         0x79 => Ld::new(LdTarget::A, LdTarget::C), 4;

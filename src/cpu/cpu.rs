@@ -8,6 +8,7 @@ pub struct Cpu {
     pub mmu: Box<dyn AddressSpace>,
     pub remaining_cycles: u8,
     pub ime: bool,
+    pub is_halted: bool,
 }
 
 impl Cpu {
@@ -17,6 +18,7 @@ impl Cpu {
             mmu: Box::new(mmu),
             remaining_cycles: 0,
             ime: true,
+            is_halted: false,
         }
     }
 
