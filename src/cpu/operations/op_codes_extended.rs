@@ -1,6 +1,7 @@
 use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
 
+use super::bit::Bit;
 use super::rl::Rl;
 use super::rlc::Rlc;
 use super::rr::Rr;
@@ -89,5 +90,73 @@ pub fn lookup_extended_op_code(op_code: u8) -> (Box<dyn Operation>, u8) {
         0x3D => Srl::new(ArithmeticTarget8Bit::L), 8;
         0x3E => Srl::new(ArithmeticTarget8Bit::HLAddr), 16;
         0x3F => Srl::new(ArithmeticTarget8Bit::A), 8;
+
+        0x40 => Bit::new(0, ArithmeticTarget8Bit::B), 8;
+        0x41 => Bit::new(0, ArithmeticTarget8Bit::C), 8;
+        0x42 => Bit::new(0, ArithmeticTarget8Bit::D), 8;
+        0x43 => Bit::new(0, ArithmeticTarget8Bit::E), 8;
+        0x44 => Bit::new(0, ArithmeticTarget8Bit::H), 8;
+        0x45 => Bit::new(0, ArithmeticTarget8Bit::L), 8;
+        0x46 => Bit::new(0, ArithmeticTarget8Bit::HLAddr), 16;
+        0x47 => Bit::new(0, ArithmeticTarget8Bit::A), 8;
+        0x48 => Bit::new(1, ArithmeticTarget8Bit::B), 8;
+        0x49 => Bit::new(1, ArithmeticTarget8Bit::C), 8;
+        0x4A => Bit::new(1, ArithmeticTarget8Bit::D), 8;
+        0x4B => Bit::new(1, ArithmeticTarget8Bit::E), 8;
+        0x4C => Bit::new(1, ArithmeticTarget8Bit::H), 8;
+        0x4D => Bit::new(1, ArithmeticTarget8Bit::L), 8;
+        0x4E => Bit::new(1, ArithmeticTarget8Bit::HLAddr), 16;
+        0x4F => Bit::new(1, ArithmeticTarget8Bit::A), 8;
+
+        0x50 => Bit::new(2, ArithmeticTarget8Bit::B), 8;
+        0x51 => Bit::new(2, ArithmeticTarget8Bit::C), 8;
+        0x52 => Bit::new(2, ArithmeticTarget8Bit::D), 8;
+        0x53 => Bit::new(2, ArithmeticTarget8Bit::E), 8;
+        0x54 => Bit::new(2, ArithmeticTarget8Bit::H), 8;
+        0x55 => Bit::new(2, ArithmeticTarget8Bit::L), 8;
+        0x56 => Bit::new(2, ArithmeticTarget8Bit::HLAddr), 16;
+        0x57 => Bit::new(2, ArithmeticTarget8Bit::A), 8;
+        0x58 => Bit::new(3, ArithmeticTarget8Bit::B), 8;
+        0x59 => Bit::new(3, ArithmeticTarget8Bit::C), 8;
+        0x5A => Bit::new(3, ArithmeticTarget8Bit::D), 8;
+        0x5B => Bit::new(3, ArithmeticTarget8Bit::E), 8;
+        0x5C => Bit::new(3, ArithmeticTarget8Bit::H), 8;
+        0x5D => Bit::new(3, ArithmeticTarget8Bit::L), 8;
+        0x5E => Bit::new(3, ArithmeticTarget8Bit::HLAddr), 16;
+        0x5F => Bit::new(3, ArithmeticTarget8Bit::A), 8;
+
+        0x60 => Bit::new(4, ArithmeticTarget8Bit::B), 8;
+        0x61 => Bit::new(4, ArithmeticTarget8Bit::C), 8;
+        0x62 => Bit::new(4, ArithmeticTarget8Bit::D), 8;
+        0x63 => Bit::new(4, ArithmeticTarget8Bit::E), 8;
+        0x64 => Bit::new(4, ArithmeticTarget8Bit::H), 8;
+        0x65 => Bit::new(4, ArithmeticTarget8Bit::L), 8;
+        0x66 => Bit::new(4, ArithmeticTarget8Bit::HLAddr), 16;
+        0x67 => Bit::new(4, ArithmeticTarget8Bit::A), 8;
+        0x68 => Bit::new(5, ArithmeticTarget8Bit::B), 8;
+        0x69 => Bit::new(5, ArithmeticTarget8Bit::C), 8;
+        0x6A => Bit::new(5, ArithmeticTarget8Bit::D), 8;
+        0x6B => Bit::new(5, ArithmeticTarget8Bit::E), 8;
+        0x6C => Bit::new(5, ArithmeticTarget8Bit::H), 8;
+        0x6D => Bit::new(5, ArithmeticTarget8Bit::L), 8;
+        0x6E => Bit::new(5, ArithmeticTarget8Bit::HLAddr), 16;
+        0x6F => Bit::new(5, ArithmeticTarget8Bit::A), 8;
+
+        0x70 => Bit::new(6, ArithmeticTarget8Bit::B), 8;
+        0x71 => Bit::new(6, ArithmeticTarget8Bit::C), 8;
+        0x72 => Bit::new(6, ArithmeticTarget8Bit::D), 8;
+        0x73 => Bit::new(6, ArithmeticTarget8Bit::E), 8;
+        0x74 => Bit::new(6, ArithmeticTarget8Bit::H), 8;
+        0x75 => Bit::new(6, ArithmeticTarget8Bit::L), 8;
+        0x76 => Bit::new(6, ArithmeticTarget8Bit::HLAddr), 16;
+        0x77 => Bit::new(6, ArithmeticTarget8Bit::A), 8;
+        0x78 => Bit::new(7, ArithmeticTarget8Bit::B), 8;
+        0x79 => Bit::new(7, ArithmeticTarget8Bit::C), 8;
+        0x7A => Bit::new(7, ArithmeticTarget8Bit::D), 8;
+        0x7B => Bit::new(7, ArithmeticTarget8Bit::E), 8;
+        0x7C => Bit::new(7, ArithmeticTarget8Bit::H), 8;
+        0x7D => Bit::new(7, ArithmeticTarget8Bit::L), 8;
+        0x7E => Bit::new(7, ArithmeticTarget8Bit::HLAddr), 16;
+        0x7F => Bit::new(7, ArithmeticTarget8Bit::A), 8;
     })
 }
