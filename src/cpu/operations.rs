@@ -26,8 +26,6 @@ pub mod ld;
 pub mod ld_16;
 pub mod ld_hl_sp;
 pub mod nop;
-pub mod op_codes;
-pub mod op_codes_extended;
 pub mod operation;
 pub mod or;
 pub mod pop;
