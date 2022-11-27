@@ -45,6 +45,8 @@ impl Cpu {
     }
 
     fn run_operation(&mut self, op: impl Operation, cycles: u8) {
+        let pc = self.reg.pc();
+        log::trace!("({pc:#06X}): {op}");
         self.remaining_cycles += cycles;
         op.run(self);
     }

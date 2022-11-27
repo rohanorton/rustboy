@@ -1,4 +1,5 @@
 use bitfield::bitfield;
+use std::fmt;
 
 bitfield! {
     pub struct Registers(u128);
@@ -73,7 +74,27 @@ impl Registers {
 impl Default for Registers {
     fn default() -> Self {
         //          A F  B C  D E  H L  PC   SP   ---- ----
-        Registers(0x01B0_0013_00D8_014D_0100_FFFE_0000_0000)
+        Registers(0x01B0_0013_00D8_014D_0000_FFFE_0000_0000)
+    }
+}
+
+impl fmt::Display for Registers {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let a = self.a();
+        let b = self.b();
+        let c = self.c();
+        let d = self.d();
+        let e = self.e();
+        let h = self.h();
+        let l = self.l();
+        let pc = self.pc();
+        let sp = self.sp();
+        let cy = self.cy_flag();
+        let hc = self.h_flag();
+        let z = self.z_flag();
+        let n = self.n_flag();
+
+        write!(f, "A: {a:#04X} | B: {b:#04X} | C: {c:#04X} | D: {d:#04X} | E: {e:#04X} | H: {h:#04X} | L: {l:#04X} | SP: {sp:#04X} | PC: {pc:#04X} | Z: {z:?} | N: {n:?} | H: {hc:?} | C: {cy:?}")
     }
 }
 
@@ -96,7 +117,7 @@ mod test {
         assert_eq!(reg.e(), 0xD8);
         assert_eq!(reg.h(), 0x01);
         assert_eq!(reg.l(), 0x4D);
-        assert_eq!(reg.pc(), 0x0100,);
+        assert_eq!(reg.pc(), 0x0000,);
         assert_eq!(reg.sp(), 0xFFFE,);
     }
 

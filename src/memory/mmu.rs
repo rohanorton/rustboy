@@ -38,11 +38,14 @@ impl AddressSpace for Mmu {
     }
 
     fn set_byte(&mut self, addr: u16, byte: u8) {
+        log::trace!("set_byte ({addr:#06X}) <== {byte:#04X}");
         self.get_space(addr).set_byte(addr, byte);
     }
 
     fn get_byte(&mut self, addr: u16) -> u8 {
-        self.get_space(addr).get_byte(addr)
+        let byte = self.get_space(addr).get_byte(addr);
+        log::trace!("get_byte ({addr:#06X}) ==> {byte:#04X}");
+        byte
     }
 }
 
