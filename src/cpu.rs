@@ -1,17 +1,21 @@
+mod clock;
 mod operations;
 mod registers;
 mod run_extended_operation;
 mod run_operation;
 
-use crate::cpu::run_extended_operation::run_extended_operation;
-use crate::cpu::run_operation::run_operation;
 use crate::memory::address_space::AddressSpace;
 use operations::Operation;
 use registers::Registers;
 
+use clock::Clock;
+use run_extended_operation::run_extended_operation;
+use run_operation::run_operation;
+
 pub struct Cpu {
     reg: Registers,
     mmu: Box<dyn AddressSpace>,
+    clock: Clock,
     remaining_cycles: u8,
     ime: bool,
     is_halted: bool,
@@ -22,6 +26,7 @@ impl Cpu {
         Cpu {
             reg: Registers::new(),
             mmu: Box::new(mmu),
+            clock: Clock::default(),
             remaining_cycles: 0,
             ime: true,
             is_halted: false,
@@ -31,7 +36,7 @@ impl Cpu {
     pub fn run(&mut self) {
         loop {
             self.tick();
-            // TODO: Clock time to wait for next tick
+            self.clock.sleep_until_next_cycle();
         }
     }
 
