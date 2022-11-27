@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use super::targets::Ld16Target;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Ld16 {
     dest: Ld16Target,
@@ -34,10 +34,7 @@ mod test {
     use crate::memory::ram::Ram;
     use crate::memory::void::Void;
 
-    use super::Cpu;
-    use super::Ld16;
-    use super::Ld16Target;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

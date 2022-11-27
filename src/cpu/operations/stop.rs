@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Stop;
 
@@ -20,7 +20,7 @@ impl fmt::Display for Stop {
 
 #[cfg(test)]
 mod test {
-    use super::Stop;
+    use super::*;
 
     #[test]
     fn display_trait() {

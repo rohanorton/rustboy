@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Dec {
     target: ArithmeticTarget8Bit,
@@ -38,10 +38,7 @@ impl fmt::Display for Dec {
 mod test {
     use crate::memory::void::Void;
 
-    use super::ArithmeticTarget8Bit;
-    use super::Cpu;
-    use super::Dec;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

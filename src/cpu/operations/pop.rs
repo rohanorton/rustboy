@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use super::targets::PushPopTarget;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Pop {
     src: PushPopTarget,
@@ -36,10 +36,7 @@ mod test {
     use crate::memory::address_space::AddressSpace;
     use crate::memory::ram::Ram;
 
-    use super::Cpu;
-    use super::Operation;
-    use super::Pop;
-    use super::PushPopTarget;
+    use super::*;
 
     fn with_ram(data: Vec<u8>) -> Cpu {
         let mut ram = Ram::new(0, data.len() as u16);

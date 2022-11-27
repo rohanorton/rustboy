@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct PrefixCB;
 
@@ -20,7 +20,7 @@ impl fmt::Display for PrefixCB {
 
 #[cfg(test)]
 mod test {
-    use super::PrefixCB;
+    use super::*;
 
     #[test]
     fn display_trait() {

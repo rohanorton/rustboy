@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use super::targets::ArithmeticTarget16Bit;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct AddHl {
     target: ArithmeticTarget16Bit,
@@ -39,10 +39,7 @@ impl fmt::Display for AddHl {
 mod test {
     use crate::memory::void::Void;
 
-    use super::AddHl;
-    use super::ArithmeticTarget16Bit;
-    use super::Cpu;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

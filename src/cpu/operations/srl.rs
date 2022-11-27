@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use super::targets::ArithmeticTarget8Bit;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 // Shifts the contents of operand to the right.
 pub struct Srl {
@@ -44,10 +44,7 @@ mod test {
     use crate::memory::ram::Ram;
     use crate::memory::void::Void;
 
-    use super::ArithmeticTarget8Bit;
-    use super::Cpu;
-    use super::Operation;
-    use super::Srl;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

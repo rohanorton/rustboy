@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Ccf;
 
@@ -23,9 +23,7 @@ impl fmt::Display for Ccf {
 mod test {
     use crate::memory::void::Void;
 
-    use super::Ccf;
-    use super::Cpu;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

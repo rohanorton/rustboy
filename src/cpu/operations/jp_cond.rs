@@ -1,10 +1,10 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
 use super::condition::Condition;
 use super::jp::Jp;
-use super::operation::Operation;
 use super::targets::AddressTarget;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct ConditionalJp {
     cond: Condition,
@@ -41,11 +41,7 @@ mod test {
     use crate::memory::address_space::AddressSpace;
     use crate::memory::ram::Ram;
 
-    use super::AddressTarget;
-    use super::Condition;
-    use super::ConditionalJp;
-    use super::Cpu;
-    use super::Operation;
+    use super::*;
 
     fn with_ram(data: Vec<u8>) -> Cpu {
         let mut ram = Ram::new(0, data.len() as u16);

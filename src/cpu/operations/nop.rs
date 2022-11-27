@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 pub struct Nop;
 
@@ -17,7 +17,7 @@ impl fmt::Display for Nop {
 
 #[cfg(test)]
 mod test {
-    use super::Nop;
+    use super::*;
 
     #[test]
     fn display_trait() {

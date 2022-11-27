@@ -1,8 +1,8 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
 use crate::byte::lower_nibble;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 // Decimal adjust register A.
 // This instruction adjusts register A so that the correct representation
@@ -56,9 +56,7 @@ mod test {
     use crate::cpu::operations::targets::ArithmeticTarget8Bit;
     use crate::memory::void::Void;
 
-    use super::Cpu;
-    use super::Daa;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

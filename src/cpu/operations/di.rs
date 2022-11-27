@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 /// Disable Interrupt
 pub struct Di;
@@ -20,11 +20,10 @@ impl fmt::Display for Di {
 
 #[cfg(test)]
 mod test {
-    use crate::cpu::cpu::Cpu;
+    use crate::cpu::Cpu;
     use crate::memory::void::Void;
 
-    use super::Di;
-    use super::Operation;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)

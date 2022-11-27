@@ -1,4 +1,4 @@
-use crate::cpu::cpu::Cpu;
+use crate::cpu::Cpu;
 use std::fmt;
 
 pub enum ArithmeticTarget8Bit {

@@ -26,7 +26,6 @@ pub mod ld;
 pub mod ld_16;
 pub mod ld_hl_sp;
 pub mod nop;
-pub mod operation;
 pub mod or;
 pub mod pop;
 pub mod prefix_cb;
@@ -55,3 +54,11 @@ pub mod sub;
 pub mod swap;
 pub mod targets;
 pub mod xor;
+
+use core::fmt;
+
+use crate::cpu::Cpu;
+
+pub trait Operation: fmt::Display {
+    fn run(&self, cpu: &mut Cpu);
+}

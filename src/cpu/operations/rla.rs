@@ -1,7 +1,7 @@
 use std::fmt;
 
-use super::super::cpu::Cpu;
-use super::operation::Operation;
+use crate::cpu::operations::Operation;
+use crate::cpu::Cpu;
 
 /// Rotates the contents of register A to the left.
 pub struct Rla;
@@ -29,9 +29,7 @@ impl fmt::Display for Rla {
 mod test {
     use crate::memory::void::Void;
 
-    use super::Cpu;
-    use super::Operation;
-    use super::Rla;
+    use super::*;
 
     fn empty() -> Cpu {
         Cpu::new(Void)
